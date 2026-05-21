@@ -1,0 +1,104 @@
+{
+  "_meta": {
+    "purpose": "Toàn bộ 2830 polygon Hồng Phát + metadata đầy đủ theo interface LotEnriched",
+    "expected_feature_count": 2830,
+    "current_feature_count": 0,
+    "status": "EMPTY — pending import",
+    "source": {
+      "primary": "public/tiles/advisory-manifest.json (feature_count: 2830) — staging batch",
+      "api_endpoint": "/api/map/advisory-lots — live polygon stream from Postgres/PMTiles",
+      "ground_truth": "1/500 plan PDF (Phú Mỹ Hưng × Nomura) — pending CDT delivery"
+    },
+    "import_plan": [
+      "Step 1: Fetch /api/map/advisory-lots khi runtime project running → dump raw 2830 polygons",
+      "Step 2: Map raw → LotEnriched schema (data/types/honghac.ts)",
+      "Step 3: Validate every polygon: SRID 4326, simple geometry, non-self-intersecting, area sanity check",
+      "Step 4: Seed Payload Postgres collection 'lots' via payload/seed/003-lots-hong-phat.ts",
+      "Step 5: Build PMTiles archive hhc.v{YYYYMMDD}.pmtiles via tippecanoe",
+      "Step 6: Cross-reference với 1/500 plan khi CDT cấp — update display_source='official' cho lots verified"
+    ],
+    "schema": "LotEnriched (see ../types/honghac.ts)",
+    "sample_count": 2,
+    "do_not_use_sample_for_production": true,
+    "important": "KHÔNG bịa polygon. Sample dưới đây dùng centroid và bbox approximate trong khu vực Hồng Phát rough placement — geometry coordinates được mark explicit là PLACEHOLDER."
+  },
+  "lots": [],
+  "sample": [
+    {
+      "internal_id": "hp-staging-000001",
+      "official_lot_code": null,
+      "current_geometry": {
+        "type": "Polygon",
+        "_placeholder": true,
+        "_todo": "Replace với real polygon từ advisory-manifest.json",
+        "coordinates": [[
+          [106.0560, 21.0220],
+          [106.0561, 21.0220],
+          [106.0561, 21.0221],
+          [106.0560, 21.0221],
+          [106.0560, 21.0220]
+        ]]
+      },
+      "display_source": "internal",
+      "last_official_sync": null,
+      "phase": "hp-2026-q4",
+      "status": "available",
+      "area_m2": 300,
+      "subdivision": "hong-phat",
+      "sku": "SH-A",
+      "kind": "shophouse",
+      "centroid": { "type": "Point", "coordinates": [106.05605, 21.02205] },
+      "orientation": "S",
+      "frontage_m": 6,
+      "area_label": "300m²",
+      "is_corner_lot": false,
+      "is_park_facing": true,
+      "is_water_facing": false,
+      "privacy_score": 62,
+      "greenery_score": 78,
+      "sunlight_score": 84,
+      "park_distance_m": 120,
+      "price_indicative_vnd": null,
+      "listing": "staging",
+      "updated_at": "2026-05-22T00:00:00Z"
+    },
+    {
+      "internal_id": "hp-staging-000002",
+      "official_lot_code": null,
+      "current_geometry": {
+        "type": "Polygon",
+        "_placeholder": true,
+        "_todo": "Replace với real polygon",
+        "coordinates": [[
+          [106.0570, 21.0225],
+          [106.0571, 21.0225],
+          [106.0571, 21.0226],
+          [106.0570, 21.0226],
+          [106.0570, 21.0225]
+        ]]
+      },
+      "display_source": "internal",
+      "last_official_sync": null,
+      "phase": "hp-2026-q4",
+      "status": "available",
+      "area_m2": 333.51,
+      "subdivision": "hong-phat",
+      "sku": "VILLA-A",
+      "kind": "villa-don-lap",
+      "centroid": { "type": "Point", "coordinates": [106.05705, 21.02255] },
+      "orientation": "SE",
+      "frontage_m": 15,
+      "area_label": "333.51m²",
+      "is_corner_lot": true,
+      "is_park_facing": false,
+      "is_water_facing": true,
+      "privacy_score": 88,
+      "greenery_score": 72,
+      "sunlight_score": 90,
+      "park_distance_m": 180,
+      "price_indicative_vnd": null,
+      "listing": "staging",
+      "updated_at": "2026-05-22T00:00:00Z"
+    }
+  ]
+}

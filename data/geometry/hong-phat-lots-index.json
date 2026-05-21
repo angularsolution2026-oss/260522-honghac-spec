@@ -1,0 +1,31 @@
+{
+  "_meta": {
+    "purpose": "Lightweight LOD index — phục vụ macro-close / micro render nhanh",
+    "schema": "AdvisoryManifest (see ../types/honghac.ts)",
+    "expected_feature_count": 2830,
+    "current_feature_count": 0,
+    "status": "EMPTY — generated từ hong-phat-lots-full.json via build script",
+    "build_command": "node scripts/build-lots-index.mjs",
+    "size_target_kb": 400,
+    "fields_per_entry": [
+      "internal_id (string)",
+      "subdivision (SubdivisionId)",
+      "phase (string)",
+      "kind (LotKind)",
+      "c: centroid [lng, lat] — đủ cho dot rendering",
+      "b: bbox [west, south, east, north] — đủ cho viewport culling",
+      "s: status+listing 2-char code (as|ap|rs|rp|ss|sp)",
+      "area (number m²)"
+    ],
+    "served_at": "/tiles/advisory-manifest.json (Vercel edge cached, see edge-cache config in security)",
+    "regeneration_trigger": [
+      "Payload Lots collection afterChange hook",
+      "Nightly cron 0 2 * * *"
+    ]
+  },
+  "generated_at": null,
+  "source": "internal-staging",
+  "feature_count": 0,
+  "bbox": [106.0512, 21.0198, 106.0628, 21.0290],
+  "lots": []
+}

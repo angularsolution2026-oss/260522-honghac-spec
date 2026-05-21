@@ -1,0 +1,43 @@
+{
+  "type": "FeatureCollection",
+  "_meta": {
+    "purpose": "197ha master plan boundary — Hồng Hạc City",
+    "status": "PLACEHOLDER",
+    "verification_status": "approximate-bbox-from-public-google-maps-link",
+    "source_link": "https://maps.app.goo.gl/gmdHomzDsijESLSS7",
+    "todo": [
+      "Import verified polygon từ official 1/500 plan PDF (Phú Mỹ Hưng × Nomura)",
+      "Confirm coordinate system EPSG:4326 with surveyor",
+      "Replace 4-corner bbox bằng actual irregular boundary (likely 20-50 vertices)"
+    ],
+    "do_not_use_for_production": true
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "hhc-masterplan-197ha",
+        "name": "Hồng Hạc City — 197.76 ha",
+        "kind": "masterplan-boundary",
+        "area_ha_official": 197.76,
+        "build_density_pct": 27.9,
+        "population_planned": 27700,
+        "green_water_pct": 19.6,
+        "subdivisions_count": 3,
+        "developer": ["Phú Mỹ Hưng", "Nomura Real Estate Development"],
+        "address": "Phường Song Liễu, Tỉnh Bắc Ninh",
+        "placeholder": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [106.0512, 21.0198],
+          [106.0794, 21.0198],
+          [106.0794, 21.0372],
+          [106.0512, 21.0372],
+          [106.0512, 21.0198]
+        ]]
+      }
+    }
+  ]
+}

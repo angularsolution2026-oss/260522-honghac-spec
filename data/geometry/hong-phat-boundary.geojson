@@ -1,0 +1,42 @@
+{
+  "type": "FeatureCollection",
+  "_meta": {
+    "purpose": "Hồng Phát subdivision boundary (1 of 3 phân khu)",
+    "status": "PLACEHOLDER",
+    "verification_status": "approximate-bbox",
+    "todo": [
+      "Replace với polygon thực tế từ 1/500 plan",
+      "Verify subdivision area và overlap với masterplan-197ha boundary",
+      "Add internal block-grid sub-features khi available"
+    ],
+    "do_not_use_for_production": true
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "hong-phat",
+        "name": "Phân khu Hồng Phát",
+        "tagline": "KHỞI NGUỒN THỊNH VƯỢNG",
+        "kind": "subdivision-boundary",
+        "total_products_planned": 1074,
+        "build_density_pct": 51.9,
+        "architecture_style": "Tân cổ điển Pháp",
+        "ownership_form": "Sở hữu lâu dài",
+        "handover_target": "2027-06",
+        "tieu_khu_count": 3,
+        "placeholder": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [106.0512, 21.0198],
+          [106.0628, 21.0198],
+          [106.0628, 21.0290],
+          [106.0512, 21.0290],
+          [106.0512, 21.0198]
+        ]]
+      }
+    }
+  ]
+}
