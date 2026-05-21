@@ -1,0 +1,1073 @@
+{
+  "source_dxf": "HHXL - QH05.2.dxf",
+  "total_features": 6934,
+  "layers": {
+    "nen xr - 20220315 - PMH$0$exist": {
+      "total": 2157,
+      "by_block": {
+        "nen xr - 20220315 - PMH$0$dc": {
+          "ELLIPSE": 478
+        },
+        "nen xr - 20220315 - PMH": {
+          "LWPOLYLINE": 828,
+          "CIRCLE": 194,
+          "HATCH": 129
+        },
+        "nen xr - 20220315 - PMH$0$ban in cuoi 2019 2021": {
+          "CIRCLE": 153,
+          "ELLIPSE": 120,
+          "SOLID": 117,
+          "LWPOLYLINE": 60
+        },
+        "nen xr - 20220315 - PMH$0$point": {
+          "CIRCLE": 78
+        }
+      }
+    },
+    "2021.10 - HHXL- CONCEPT$0$1-bo bt": {
+      "total": 1245,
+      "by_block": {
+        "2021.10 - HHXL- CONCEPT": {
+          "LWPOLYLINE": 1087
+        },
+        "2021.10 - HHXL- CONCEPT$0$A$C72b89cd5": {
+          "LWPOLYLINE": 158
+        }
+      }
+    },
+    "T_Moc A0": {
+      "total": 831,
+      "by_block": {
+        "*U2": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U3": {
+          "HATCH": 14,
+          "CIRCLE": 7
+        },
+        "*U4": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U104": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U5": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U6": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U105": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U106": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U102": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U103": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U108": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U7": {
+          "HATCH": 18,
+          "CIRCLE": 9
+        },
+        "*U8": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U112": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U110": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U9": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U111": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U107": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U10": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U11": {
+          "HATCH": 12,
+          "CIRCLE": 6
+        },
+        "*U12": {
+          "HATCH": 6,
+          "CIRCLE": 3
+        },
+        "*U13": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U14": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U113": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U17": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U15": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U114": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U16": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U109": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U118": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U119": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U115": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U116": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U117": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U123": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U124": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U127": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U128": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U125": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U126": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U120": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U121": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U122": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U129": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U130": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U18": {
+          "HATCH": 18,
+          "CIRCLE": 9
+        },
+        "*U131": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U19": {
+          "HATCH": 6,
+          "CIRCLE": 3
+        },
+        "*U132": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U20": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U21": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U22": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U23": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U24": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U138": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U133": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U134": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U142": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U143": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U144": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U145": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U25": {
+          "HATCH": 6,
+          "CIRCLE": 3
+        },
+        "*U141": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U139": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U140": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U135": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U136": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U78": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U137": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U146": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U147": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U148": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U151": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U26": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U152": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U153": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U27": {
+          "HATCH": 14,
+          "CIRCLE": 7
+        },
+        "*U28": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U29": {
+          "HATCH": 14,
+          "CIRCLE": 7
+        },
+        "*U149": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U154": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U30": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U155": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U156": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U31": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U157": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U158": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U150": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U33": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U34": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U32": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U159": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U160": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U35": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U36": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U37": {
+          "HATCH": 8,
+          "CIRCLE": 4
+        },
+        "*U38": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U39": {
+          "HATCH": 6,
+          "CIRCLE": 3
+        },
+        "*U41": {
+          "HATCH": 4,
+          "CIRCLE": 2
+        },
+        "*U40": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U42": {
+          "HATCH": 6,
+          "CIRCLE": 3
+        },
+        "*U163": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U161": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U162": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U43": {
+          "HATCH": 4,
+          "CIRCLE": 2
+        },
+        "*U45": {
+          "HATCH": 4,
+          "CIRCLE": 2
+        },
+        "*U44": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U46": {
+          "HATCH": 4,
+          "CIRCLE": 2
+        },
+        "*U48": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U166": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U47": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U167": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U49": {
+          "HATCH": 24,
+          "CIRCLE": 12
+        },
+        "*U164": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U165": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U171": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U170": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U50": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U51": {
+          "HATCH": 4,
+          "CIRCLE": 2
+        },
+        "*U52": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U172": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U173": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U168": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U169": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U53": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U174": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U186": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U187": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U176": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U177": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U178": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U182": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U183": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U180": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U181": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U175": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U55": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U54": {
+          "HATCH": 8,
+          "CIRCLE": 4
+        },
+        "*U56": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U188": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U179": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U58": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U57": {
+          "HATCH": 10,
+          "CIRCLE": 5
+        },
+        "*U59": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U189": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U190": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U184": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U185": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U196": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U197": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U60": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U61": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U62": {
+          "HATCH": 4,
+          "CIRCLE": 2
+        },
+        "*U193": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U198": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U63": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U194": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U195": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U64": {
+          "HATCH": 4,
+          "CIRCLE": 2
+        },
+        "*U65": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U192": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U71": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U75": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U66": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U199": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U67": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U69": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U70": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U68": {
+          "HATCH": 4,
+          "CIRCLE": 2
+        },
+        "*U72": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U73": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U77": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U200": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U205": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U76": {
+          "HATCH": 10,
+          "CIRCLE": 5
+        },
+        "*U74": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U201": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U202": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U203": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U204": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U90": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U91": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U99": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U100": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U92": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U93": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U94": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U95": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U96": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U101": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U88": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U89": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U97": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U98": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        },
+        "*U191": {
+          "HATCH": 2,
+          "CIRCLE": 1
+        }
+      }
+    },
+    "2021.10 - HHXL- CONCEPT$0$1-bo lk": {
+      "total": 811,
+      "by_block": {
+        "2021.10 - HHXL- CONCEPT": {
+          "LWPOLYLINE": 811
+        }
+      }
+    },
+    "2021.10 - HHXL- CONCEPT$0$1-bo sh": {
+      "total": 627,
+      "by_block": {
+        "2021.10 - HHXL- CONCEPT": {
+          "LWPOLYLINE": 627
+        }
+      }
+    },
+    "0-Symbol": {
+      "total": 408,
+      "by_block": {
+        "SDDKH": {
+          "ELLIPSE": 408
+        }
+      }
+    },
+    "2021.10 - HHXL- CONCEPT$0$1-bo btsl": {
+      "total": 332,
+      "by_block": {
+        "2021.10 - HHXL- CONCEPT": {
+          "LWPOLYLINE": 332
+        }
+      }
+    },
+    "2021.10 - HHXL- CONCEPT$0$0-Setback": {
+      "total": 127,
+      "by_block": {
+        "2021.10 - HHXL- CONCEPT": {
+          "LWPOLYLINE": 127
+        }
+      }
+    },
+    "2021.10 - HHXL- CONCEPT$0$0-Road": {
+      "total": 119,
+      "by_block": {
+        "2021.10 - HHXL- CONCEPT": {
+          "LWPOLYLINE": 119
+        }
+      }
+    },
+    "2021.10 - HHXL- CONCEPT$0$0-Sidewalk": {
+      "total": 98,
+      "by_block": {
+        "2021.10 - HHXL- CONCEPT": {
+          "LWPOLYLINE": 98
+        }
+      }
+    },
+    "3-tang": {
+      "total": 51,
+      "by_block": {
+        "<modelspace>": {
+          "HATCH": 51
+        }
+      }
+    },
+    "5-tang": {
+      "total": 51,
+      "by_block": {
+        "<modelspace>": {
+          "HATCH": 51
+        }
+      }
+    },
+    "nen xr - 20220315 - PMH$0$CHUGIAI": {
+      "total": 20,
+      "by_block": {
+        "nen xr - 20220315 - PMH$0$BB": {
+          "CIRCLE": 20
+        }
+      }
+    },
+    "0": {
+      "total": 9,
+      "by_block": {
+        "<modelspace>": {
+          "LWPOLYLINE": 9
+        }
+      }
+    },
+    "2021.10 - HHXL- CONCEPT$0$2-RANH 3 ZONE": {
+      "total": 8,
+      "by_block": {
+        "2021.10 - HHXL- CONCEPT": {
+          "LWPOLYLINE": 8
+        }
+      }
+    },
+    "2021.10 - HHXL- CONCEPT$0$$1-Ranh gioi dvo": {
+      "total": 6,
+      "by_block": {
+        "2021.10 - HHXL- CONCEPT": {
+          "LWPOLYLINE": 6
+        }
+      }
+    },
+    "0 quy dinh tang": {
+      "total": 5,
+      "by_block": {
+        "<modelspace>": {
+          "HATCH": 5
+        }
+      }
+    },
+    "0-Grid": {
+      "total": 3,
+      "by_block": {
+        "<modelspace>": {
+          "LWPOLYLINE": 3
+        }
+      }
+    },
+    "2-H-Text": {
+      "total": 3,
+      "by_block": {
+        "<modelspace>": {
+          "LWPOLYLINE": 3
+        }
+      }
+    },
+    "2021.10 - HHXL- CONCEPT$0$0-Grid": {
+      "total": 3,
+      "by_block": {
+        "2021.10 - HHXL- CONCEPT": {
+          "LWPOLYLINE": 3
+        }
+      }
+    },
+    "2-tang": {
+      "total": 3,
+      "by_block": {
+        "<modelspace>": {
+          "HATCH": 2,
+          "LWPOLYLINE": 1
+        }
+      }
+    },
+    "nen xr - 20220315 - PMH$0$khung": {
+      "total": 3,
+      "by_block": {
+        "nen xr - 20220315 - PMH$0$tba1": {
+          "CIRCLE": 3
+        }
+      }
+    },
+    "25 tang": {
+      "total": 2,
+      "by_block": {
+        "<modelspace>": {
+          "HATCH": 2
+        }
+      }
+    },
+    "2021.10 - HHXL- CONCEPT$0$0-GT LANG": {
+      "total": 2,
+      "by_block": {
+        "2021.10 - HHXL- CONCEPT": {
+          "HATCH": 2
+        }
+      }
+    },
+    "2021.10 - HHXL- CONCEPT$0$2-QHCT- tam linh": {
+      "total": 1,
+      "by_block": {
+        "2021.10 - HHXL- CONCEPT": {
+          "LWPOLYLINE": 1
+        }
+      }
+    },
+    "2021.10 - HHXL- CONCEPT$0$1-Ranh gioi QH": {
+      "total": 1,
+      "by_block": {
+        "2021.10 - HHXL- CONCEPT": {
+          "LWPOLYLINE": 1
+        }
+      }
+    },
+    "2021.10 - HHXL- CONCEPT$0$0-Axis": {
+      "total": 1,
+      "by_block": {
+        "2021.10 - HHXL- CONCEPT": {
+          "CIRCLE": 1
+        }
+      }
+    },
+    "2021.10 - HHXL- CONCEPT$0$0-Divide": {
+      "total": 1,
+      "by_block": {
+        "2021.10 - HHXL- CONCEPT": {
+          "LWPOLYLINE": 1
+        }
+      }
+    },
+    "2021.10 - hhxl - hatch sdđ - xr$0$2-QHCT-CQUAN": {
+      "total": 1,
+      "by_block": {
+        "<modelspace>": {
+          "LWPOLYLINE": 1
+        }
+      }
+    },
+    "2021.10 - hhxl - hatch sdđ - xr$0$duong 2.5m": {
+      "total": 1,
+      "by_block": {
+        "<modelspace>": {
+          "LWPOLYLINE": 1
+        }
+      }
+    },
+    "1-tang": {
+      "total": 1,
+      "by_block": {
+        "<modelspace>": {
+          "HATCH": 1
+        }
+      }
+    },
+    "10-12tang": {
+      "total": 1,
+      "by_block": {
+        "<modelspace>": {
+          "HATCH": 1
+        }
+      }
+    },
+    "2-QHCT-CX HOÀN TRẢ KÊNH": {
+      "total": 1,
+      "by_block": {
+        "<modelspace>": {
+          "LWPOLYLINE": 1
+        }
+      }
+    },
+    "1-Ranh gioi QH": {
+      "total": 1,
+      "by_block": {
+        "1": {
+          "LWPOLYLINE": 1
+        }
+      }
+    }
+  }
+}

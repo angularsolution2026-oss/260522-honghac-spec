@@ -160,13 +160,36 @@ If sharing with team:
 
 ## Status checklist
 
-- [ ] Install ODA File Converter (or DWG TrueView)
-- [ ] Convert DWG → DXF: `HHXL - QH05.2.dxf`
-- [ ] Run `scripts/dxf-to-geojson.py` → `_raw-cdt-plan.geojson` + `_cdt-plan-layers.json`
-- [ ] Review layer inventory — identify the lot-boundary layer
+- [x] Install ODA File Converter (or DWG TrueView) — done by user
+- [x] Convert DWG → DXF: `HHXL - QH05.2.dxf` (83 MB, AC1032 / AutoCAD 2018)
+- [x] Run `scripts/dxf-to-geojson.py` (INSERT-aware recursive) → 6934 polygons extracted
+- [x] Identify lot layers — found inside block `2021.10 - HHXL- CONCEPT`:
+  - `bo bt`   → 1245 villa-don-lap
+  - `bo btsl` → 332 villa-song-lap
+  - `bo lk`   → 811 townhouse
+  - `bo sh`   → 627 shophouse
+  - **Total: 3015 lots** (covers all 3 phân khu, not just Hồng Phát)
+- [x] Filter to clean datasets → `cdt-lots-3015.geojson`, `cdt-zones-3phankhu.geojson`, `cdt-infrastructure.geojson`
 - [ ] Obtain CAD→4326 transform (CDT or manual control points)
 - [ ] Apply transform → `cdt-plan-4326.geojson`
 - [ ] Run `scripts/reconcile-lots.py` → update `hong-phat-lots-full.json` with `display_source: "official"`
 - [ ] Regenerate `hong-phat-lots-index.json` via `scripts/build-lots-index.mjs`
 - [ ] Re-generate SEO metadata with new `indexable: true` for matched lots
 - [ ] Update `data/README.md` Current Status table
+
+## Verified findings from QH05.2
+
+**CAD coordinate system:** VN-2000 (likely zone 105°30' = Bắc Ninh local), units in meters
+**Lot-only bbox:** `[552118, 2323897, 559318, 2325552]` → 7.2km E-W × 1.66km N-S
+**3015 lot polygons vs 2449 staging:** CDT plan covers full HHC (all 3 phân khu), staging is current-release subset only
+
+**Lot product mix (CDT plan):**
+
+| Product | Count | p50 area | Range |
+|---|---|---|---|
+| villa-don-lap | 1245 | 330 m² | 242–798 m² |
+| villa-song-lap | 332 | 190 m² | 167–330 m² |
+| townhouse | 811 | 120 m² | 111–293 m² |
+| shophouse | 627 | 120 m² | 111–361 m² |
+
+**8 polygons in "RANH 3 ZONE" layer** — likely subdivision boundaries + sub-zones (3 largest = 71 ha combined, matches main phân khu scale).
