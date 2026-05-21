@@ -28,3 +28,8 @@ desktop.ini
 # Temp
 *.tmp
 *.bak
+
+# CDT proprietary plan files (intellectual property — never commit)
+*.dwg
+*.dxf
+HHXL*
