@@ -1,125 +1,745 @@
 {
   "_meta": {
-    "purpose": "Programmatic SEO metadata — generate 2830+ /sa-ban/hong-phat/lo/{slug} pages",
+    "purpose": "Programmatic SEO metadata - generate ~2449 /sa-ban/hong-phat/lo/{slug} pages",
     "schema": "LotSeoMetadata (see ../types/honghac.ts)",
-    "expected_page_count_when_full": 2830,
+    "expected_page_count_when_full": 2449,
     "current_count": 0,
-    "status": "EMPTY — template-driven generation pending lot data import",
+    "sample_count": 5,
+    "source_data": "data/geometry/hong-phat-lots-full.json",
+    "status": "TEMPLATE READY - data array empty; samples populated for QA reference",
     "indexability_rules": {
-      "indexable_when": [
-        "listing === 'public'",
-        "status !== 'sold' (sold lots → noindex, canonical → /sa-ban/hong-phat)",
-        "Internal ID has been QA'd (not a canary)"
+      "indexable_when_ALL": [
+        "listing === \"public\"",
+        "status !== \"sold\"",
+        "display_source === \"official\""
       ],
-      "default_noindex_categories": [
-        "Lots with listing='staging' → noindex but URL accessible",
-        "Lots with status='sold' for > 90 days → noindex",
-        "Lots without official_lot_code → noindex (utility URL only)"
-      ]
+      "currently_indexable": 0,
+      "reason": "All 2449 lots are listing=staging until CDT 1/500 plan delivered"
     },
-    "title_template": "{kind_label} {sku} {area_label}{corner_suffix} — Phân khu Hồng Phát",
-    "description_template": "Lô {sku} phân khu Hồng Phát, diện tích {area_label}, hướng {orientation_label}{park_suffix}{water_suffix}. Khám phá vị trí trên sa bàn tương tác Hồng Hạc City.",
+    "title_template": "{kind_label} {sku} {area_label} - Hong Phat",
+    "description_template": "Lo {slug} phan khu Hong Phat, dien tich {area_label}, huong {orientation_label}. Kham pha vi tri tren sa ban tuong tac Hong Hac City.",
     "keyword_templates": {
-      "primary": "{kind_label} {sku} Hồng Phát Hồng Hạc City",
+      "primary": "{kind_label} {sku} Hong Phat Hong Hac City",
       "secondary": [
-        "{kind_label} {area_label} Bắc Ninh",
-        "{sku} Hồng Hạc City giá",
-        "{kind_label} sổ hồng từng căn Bắc Ninh"
+        "{kind_label} {area_label} Bac Ninh",
+        "{sku} Hong Hac City gia",
+        "{kind_label} so hong tung can Bac Ninh"
       ],
       "long_tail_patterns": [
-        "{kind_label} lô góc phân khu Hồng Phát",
-        "{kind_label} view công viên Hồng Phát {area_label}",
-        "{kind_label} view mặt nước Hồng Hạc City",
-        "{kind_label} {area_label} hướng {orientation_label} Bắc Ninh",
-        "Mua {kind_label} {sku} Hồng Hạc City có sổ hồng",
-        "{kind_label} gần trường liên cấp Hồng Phát"
+        "{kind_label} lo goc phan khu Hong Phat",
+        "{kind_label} view cong vien Hong Phat {area_label}",
+        "{kind_label} view mat nuoc Hong Hac City",
+        "{kind_label} {area_label} huong {orientation_label} Bac Ninh",
+        "Mua {kind_label} {sku} Hong Hac City co so hong",
+        "{kind_label} block {subZone} Hong Phat"
       ]
     },
-    "jsonld_schema": "RealEstateListing (when listing=public + price known) OR Product (when listing=public + price unknown) OR Place (when listing=staging — no offers data)",
+    "jsonld_schema": "Place when staging; RealEstateListing when public+price; Product when public+no-price",
     "internal_link_strategy": {
       "from_lot_page": [
-        { "to": "/sa-ban/hong-phat", "anchor": "Xem trên sa bàn tương tác", "priority": "P0" },
-        { "to": "/sa-ban/hong-phat?sku={sku}", "anchor": "Các lô {sku} khác", "priority": "P1" },
-        { "to": "/phap-ly/so-hong", "anchor": "100% sổ hồng từng căn", "priority": "P0" },
-        { "to": "/seo/hong-phat/{lifestyle_tag}", "anchor": "{lifestyle_label}", "priority": "P1" }
+        {
+          "to": "/sa-ban/hong-phat",
+          "anchor_pattern": "Xem tren sa ban tuong tac",
+          "priority": "P0"
+        },
+        {
+          "to": "/sa-ban/hong-phat?subZone={subZone}",
+          "anchor_pattern": "Cac lo khac block {subZone}",
+          "priority": "P1"
+        },
+        {
+          "to": "/sa-ban/hong-phat?kind={kind}",
+          "anchor_pattern": "Cac {kind_label} khac",
+          "priority": "P1"
+        },
+        {
+          "to": "/phap-ly/so-hong",
+          "anchor_pattern": "100% so hong tung can",
+          "priority": "P0"
+        }
       ]
     },
     "generation_pipeline": [
       "Step 1: Read lots from data/geometry/hong-phat-lots-full.json",
-      "Step 2: For each lot run scripts/generate-lot-seo.mjs",
+      "Step 2: For each lot run scripts/generate-lot-seo.mjs (TBD)",
       "Step 3: Emit per-lot MDX or DB record in pages collection",
-      "Step 4: Update sitemap-sa-ban.xml",
+      "Step 4: Update sitemap-sa-ban.xml (only indexable=true entries)",
       "Step 5: Build-time validate uniqueness of titles + canonical URLs"
     ],
     "kind_label_map": {
-      "villa-don-lap": "Biệt thự đơn lập",
-      "villa-song-lap": "Biệt thự song lập",
+      "villa-don-lap": "Biet thu don lap",
+      "villa-song-lap": "Biet thu song lap",
       "shophouse": "Shophouse",
-      "townhouse": "Nhà phố liền kề"
+      "townhouse": "Nha pho lien ke",
+      "townhouse-compact": "Nha pho compact"
     },
     "orientation_label_map": {
-      "N": "Bắc", "NE": "Đông Bắc", "E": "Đông", "SE": "Đông Nam",
-      "S": "Nam", "SW": "Tây Nam", "W": "Tây", "NW": "Tây Bắc"
+      "N": "Bac",
+      "NE": "Dong Bac",
+      "E": "Dong",
+      "SE": "Dong Nam",
+      "S": "Nam",
+      "SW": "Tay Nam",
+      "W": "Tay",
+      "NW": "Tay Bac"
     }
   },
   "pages": [],
-  "sample": [
+  "samples": [
     {
-      "internal_id": "hp-staging-000001",
-      "slug": "sh-a-300m2-shophouse-view-cong-vien",
-      "canonical_url": "https://bacninhhonghaccity.vn/sa-ban/hong-phat/lo/sh-a-300m2-shophouse-view-cong-vien",
+      "internal_id": "lot_03158",
+      "slug": "h2-2-a-5",
+      "canonical_url": "https://bacninhhonghaccity.vn/sa-ban/hong-phat/lo/h2-2-a-5",
       "indexable": false,
-      "_indexable_reason": "listing=staging — accessible but noindex until CDT publishes",
-      "title": "Shophouse SH-A 300m² view công viên — Hồng Phát",
-      "description": "Lô SH-A phân khu Hồng Phát, diện tích 300m², hướng Nam, view công viên trung tâm. Khám phá vị trí trên sa bàn tương tác Hồng Hạc City.",
-      "h1": "Shophouse SH-A 300m² view công viên — Phân khu Hồng Phát",
-      "og_image_url": "https://cdn.bacninhhonghaccity.vn/og/lots/hp-staging-000001.jpg",
-      "primary_keyword": "shophouse SH-A Hồng Phát",
+      "_indexable_reason": "listing=staging, status=available, source=internal — noindex utility URL until CDT publishes",
+      "title": "Biệt thự đơn lập H2-2-A-5 347.2m² — Hồng Phát",
+      "description": "Lô h2-2-a-5 phân khu Hồng Phát, diện tích 347.2m², hướng Nam. Khám phá vị trí trên sa bàn tương tác Hồng Hạc City.",
+      "h1": "Biệt thự đơn lập H2-2-A-5 347.2m² — Phân khu Hồng Phát",
+      "og_image_url": "https://cdn.bacninhhonghaccity.vn/og/lots/lot_03158.jpg",
+      "primary_keyword": "biệt thự đơn lập H2-2-A-5 Hồng Phát",
       "secondary_keywords": [
-        "shophouse 300m² Bắc Ninh",
-        "shophouse view công viên Hồng Hạc City",
-        "shophouse sổ hồng từng căn Bắc Ninh"
+        "biệt thự đơn lập 347.2m² Bắc Ninh",
+        "H2-2-A-5 Hồng Hạc City giá",
+        "biệt thự đơn lập sổ hồng từng căn Bắc Ninh"
       ],
       "long_tail_keywords": [
-        "shophouse view công viên Hồng Phát 300m²",
-        "mua shophouse SH-A Hồng Hạc City có sổ hồng",
-        "shophouse 300m² hướng Nam Bắc Ninh",
-        "shophouse gần trường liên cấp Hồng Phát"
+        "biệt thự đơn lập 347.2m² hướng nam Bắc Ninh",
+        "mua biệt thự đơn lập h2-2-a-5 Hồng Hạc City có sổ hồng",
+        "biệt thự đơn lập block h1-3 Hồng Phát",
+        "biệt thự đơn lập hướng tốt Hồng Phát 347.2m²"
       ],
       "jsonld": {
         "@context": "https://schema.org",
         "@type": "Place",
-        "name": "Lô SH-A 300m² — Phân khu Hồng Phát",
+        "name": "Lô H2-2-A-5 347.2m² — Phân khu Hồng Phát",
         "address": {
           "@type": "PostalAddress",
           "addressLocality": "Phường Song Liễu",
           "addressRegion": "Bắc Ninh",
           "addressCountry": "VN"
         },
-        "geo": { "@type": "GeoCoordinates", "latitude": 21.02205, "longitude": 106.05605 }
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 21.0086516,
+          "longitude": 106.0193463
+        }
       },
       "breadcrumbs": [
-        { "name": "Trang chủ", "url": "/" },
-        { "name": "Sa bàn", "url": "/sa-ban" },
-        { "name": "Hồng Phát", "url": "/sa-ban/hong-phat" },
-        { "name": "SH-A 300m² view công viên", "url": "/sa-ban/hong-phat/lo/sh-a-300m2-shophouse-view-cong-vien" }
+        {
+          "name": "Trang chủ",
+          "url": "/"
+        },
+        {
+          "name": "Sa bàn",
+          "url": "/sa-ban"
+        },
+        {
+          "name": "Hồng Phát",
+          "url": "/sa-ban/hong-phat"
+        },
+        {
+          "name": "Biệt thự đơn lập H2-2-A-5",
+          "url": "/sa-ban/hong-phat/lo/h2-2-a-5"
+        }
       ],
       "internal_links": [
-        { "url": "/sa-ban/hong-phat", "anchor": "Xem trên sa bàn tương tác", "priority": "P0" },
-        { "url": "/sa-ban/hong-phat?sku=SH-A", "anchor": "Các lô SH-A khác trong Hồng Phát", "priority": "P1" },
-        { "url": "/phap-ly/so-hong", "anchor": "100% sổ hồng từng căn", "priority": "P0" },
-        { "url": "/seo/hong-phat/gan-cong-vien", "anchor": "Các lô gần công viên trung tâm", "priority": "P1" }
+        {
+          "url": "/sa-ban/hong-phat",
+          "anchor": "Xem trên sa bàn tương tác",
+          "priority": "P0"
+        },
+        {
+          "url": "/sa-ban/hong-phat?subZone=h1-3",
+          "anchor": "Các lô khác block H1-3",
+          "priority": "P1"
+        },
+        {
+          "url": "/sa-ban/hong-phat?kind=villa-don-lap",
+          "anchor": "Các Biệt thự đơn lập khác trong Hồng Phát",
+          "priority": "P1"
+        },
+        {
+          "url": "/phap-ly/so-hong",
+          "anchor": "100% sổ hồng từng căn",
+          "priority": "P0"
+        }
       ],
       "body_blocks": [
-        { "kind": "specs", "data": { "area_m2": 300, "frontage_m": 6, "orientation": "S", "kind": "shophouse", "sku": "SH-A" } },
-        { "kind": "location", "nearby_amenities": [
-          { "name": "Công viên trung tâm", "distance_m": 120 },
-          { "name": "Trường liên cấp", "distance_m": 320 },
-          { "name": "Trung tâm thương mại", "distance_m": 480 }
-        ]},
-        { "kind": "lifestyle_match", "personas": ["gia-dinh", "o-thuc"] },
-        { "kind": "financing", "ltv_max": 0.75, "promo_months": 18 },
-        { "kind": "evidence", "doc_kinds": ["so-hong", "quy-hoach-1-500", "gpxd"] }
+        {
+          "kind": "specs",
+          "data": {
+            "area_m2": 347.2,
+            "frontage_m": 19.3,
+            "orientation": "S",
+            "kind": "villa-don-lap",
+            "sku": "H2-2-A-5",
+            "subZone": "h1-3"
+          }
+        },
+        {
+          "kind": "location",
+          "nearby_amenities": [
+            {
+              "name": "Công viên trung tâm",
+              "distance_m": "TODO_compute_from_geometry"
+            },
+            {
+              "name": "Trường liên cấp",
+              "distance_m": "TODO_compute_from_geometry"
+            },
+            {
+              "name": "Trung tâm thương mại",
+              "distance_m": "TODO_compute_from_geometry"
+            }
+          ]
+        },
+        {
+          "kind": "lifestyle_match",
+          "personas": [
+            "gia-dinh",
+            "o-thuc"
+          ]
+        },
+        {
+          "kind": "financing",
+          "ltv_max": 0.75,
+          "promo_months": 18,
+          "subsidy_months": 12,
+          "subsidy_pct": 3.0
+        },
+        {
+          "kind": "evidence",
+          "doc_kinds": [
+            "so-hong",
+            "quy-hoach-1-500",
+            "gpxd"
+          ]
+        }
+      ],
+      "last_generated_at": "2026-05-22T00:00:00Z"
+    },
+    {
+      "internal_id": "lot_03097",
+      "slug": "g2-2-a-1",
+      "canonical_url": "https://bacninhhonghaccity.vn/sa-ban/hong-phat/lo/g2-2-a-1",
+      "indexable": false,
+      "_indexable_reason": "listing=staging, status=available, source=internal — noindex utility URL until CDT publishes",
+      "title": "Biệt thự song lập G2-2-A-1 279m² — Hồng Phát",
+      "description": "Lô g2-2-a-1 phân khu Hồng Phát, diện tích 279m², hướng Đông Nam. Khám phá vị trí trên sa bàn tương tác Hồng Hạc City.",
+      "h1": "Biệt thự song lập G2-2-A-1 279m² — Phân khu Hồng Phát",
+      "og_image_url": "https://cdn.bacninhhonghaccity.vn/og/lots/lot_03097.jpg",
+      "primary_keyword": "biệt thự song lập G2-2-A-1 Hồng Phát",
+      "secondary_keywords": [
+        "biệt thự song lập 279m² Bắc Ninh",
+        "G2-2-A-1 Hồng Hạc City giá",
+        "biệt thự song lập sổ hồng từng căn Bắc Ninh"
+      ],
+      "long_tail_keywords": [
+        "biệt thự song lập 279m² hướng đông nam Bắc Ninh",
+        "mua biệt thự song lập g2-2-a-1 Hồng Hạc City có sổ hồng",
+        "biệt thự song lập block gcx2 Hồng Phát",
+        "biệt thự song lập hướng tốt Hồng Phát 279m²"
+      ],
+      "jsonld": {
+        "@context": "https://schema.org",
+        "@type": "Place",
+        "name": "Lô G2-2-A-1 279m² — Phân khu Hồng Phát",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Phường Song Liễu",
+          "addressRegion": "Bắc Ninh",
+          "addressCountry": "VN"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 21.0164133,
+          "longitude": 106.0072022
+        }
+      },
+      "breadcrumbs": [
+        {
+          "name": "Trang chủ",
+          "url": "/"
+        },
+        {
+          "name": "Sa bàn",
+          "url": "/sa-ban"
+        },
+        {
+          "name": "Hồng Phát",
+          "url": "/sa-ban/hong-phat"
+        },
+        {
+          "name": "Biệt thự song lập G2-2-A-1",
+          "url": "/sa-ban/hong-phat/lo/g2-2-a-1"
+        }
+      ],
+      "internal_links": [
+        {
+          "url": "/sa-ban/hong-phat",
+          "anchor": "Xem trên sa bàn tương tác",
+          "priority": "P0"
+        },
+        {
+          "url": "/sa-ban/hong-phat?subZone=gcx2",
+          "anchor": "Các lô khác block GCX2",
+          "priority": "P1"
+        },
+        {
+          "url": "/sa-ban/hong-phat?kind=villa-song-lap",
+          "anchor": "Các Biệt thự song lập khác trong Hồng Phát",
+          "priority": "P1"
+        },
+        {
+          "url": "/phap-ly/so-hong",
+          "anchor": "100% sổ hồng từng căn",
+          "priority": "P0"
+        }
+      ],
+      "body_blocks": [
+        {
+          "kind": "specs",
+          "data": {
+            "area_m2": 279.0,
+            "frontage_m": 15.5,
+            "orientation": "SE",
+            "kind": "villa-song-lap",
+            "sku": "G2-2-A-1",
+            "subZone": "gcx2"
+          }
+        },
+        {
+          "kind": "location",
+          "nearby_amenities": [
+            {
+              "name": "Công viên trung tâm",
+              "distance_m": "TODO_compute_from_geometry"
+            },
+            {
+              "name": "Trường liên cấp",
+              "distance_m": "TODO_compute_from_geometry"
+            },
+            {
+              "name": "Trung tâm thương mại",
+              "distance_m": "TODO_compute_from_geometry"
+            }
+          ]
+        },
+        {
+          "kind": "lifestyle_match",
+          "personas": [
+            "gia-dinh",
+            "o-thuc"
+          ]
+        },
+        {
+          "kind": "financing",
+          "ltv_max": 0.75,
+          "promo_months": 18,
+          "subsidy_months": 12,
+          "subsidy_pct": 3.0
+        },
+        {
+          "kind": "evidence",
+          "doc_kinds": [
+            "so-hong",
+            "quy-hoach-1-500",
+            "gpxd"
+          ]
+        }
+      ],
+      "last_generated_at": "2026-05-22T00:00:00Z"
+    },
+    {
+      "internal_id": "lot_03154",
+      "slug": "h2-2-a-19",
+      "canonical_url": "https://bacninhhonghaccity.vn/sa-ban/hong-phat/lo/h2-2-a-19",
+      "indexable": false,
+      "_indexable_reason": "listing=staging, status=available, source=internal — noindex utility URL until CDT publishes",
+      "title": "Shophouse H2-2-A-19 496m² — Hồng Phát",
+      "description": "Lô h2-2-a-19 phân khu Hồng Phát, diện tích 496m², hướng Nam. Khám phá vị trí trên sa bàn tương tác Hồng Hạc City.",
+      "h1": "Shophouse H2-2-A-19 496m² — Phân khu Hồng Phát",
+      "og_image_url": "https://cdn.bacninhhonghaccity.vn/og/lots/lot_03154.jpg",
+      "primary_keyword": "shophouse H2-2-A-19 Hồng Phát",
+      "secondary_keywords": [
+        "shophouse 496m² Bắc Ninh",
+        "H2-2-A-19 Hồng Hạc City giá",
+        "shophouse sổ hồng từng căn Bắc Ninh"
+      ],
+      "long_tail_keywords": [
+        "shophouse 496m² hướng nam Bắc Ninh",
+        "mua shophouse h2-2-a-19 Hồng Hạc City có sổ hồng",
+        "shophouse block h1-3 Hồng Phát",
+        "shophouse hướng tốt Hồng Phát 496m²"
+      ],
+      "jsonld": {
+        "@context": "https://schema.org",
+        "@type": "Place",
+        "name": "Lô H2-2-A-19 496m² — Phân khu Hồng Phát",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Phường Song Liễu",
+          "addressRegion": "Bắc Ninh",
+          "addressCountry": "VN"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 21.0116776,
+          "longitude": 106.017092
+        }
+      },
+      "breadcrumbs": [
+        {
+          "name": "Trang chủ",
+          "url": "/"
+        },
+        {
+          "name": "Sa bàn",
+          "url": "/sa-ban"
+        },
+        {
+          "name": "Hồng Phát",
+          "url": "/sa-ban/hong-phat"
+        },
+        {
+          "name": "Shophouse H2-2-A-19",
+          "url": "/sa-ban/hong-phat/lo/h2-2-a-19"
+        }
+      ],
+      "internal_links": [
+        {
+          "url": "/sa-ban/hong-phat",
+          "anchor": "Xem trên sa bàn tương tác",
+          "priority": "P0"
+        },
+        {
+          "url": "/sa-ban/hong-phat?subZone=h1-3",
+          "anchor": "Các lô khác block H1-3",
+          "priority": "P1"
+        },
+        {
+          "url": "/sa-ban/hong-phat?kind=shophouse",
+          "anchor": "Các Shophouse khác trong Hồng Phát",
+          "priority": "P1"
+        },
+        {
+          "url": "/phap-ly/so-hong",
+          "anchor": "100% sổ hồng từng căn",
+          "priority": "P0"
+        }
+      ],
+      "body_blocks": [
+        {
+          "kind": "specs",
+          "data": {
+            "area_m2": 496.0,
+            "frontage_m": 20.0,
+            "orientation": "S",
+            "kind": "shophouse",
+            "sku": "H2-2-A-19",
+            "subZone": "h1-3"
+          }
+        },
+        {
+          "kind": "location",
+          "nearby_amenities": [
+            {
+              "name": "Công viên trung tâm",
+              "distance_m": "TODO_compute_from_geometry"
+            },
+            {
+              "name": "Trường liên cấp",
+              "distance_m": "TODO_compute_from_geometry"
+            },
+            {
+              "name": "Trung tâm thương mại",
+              "distance_m": "TODO_compute_from_geometry"
+            }
+          ]
+        },
+        {
+          "kind": "lifestyle_match",
+          "personas": [
+            "dau-tu"
+          ]
+        },
+        {
+          "kind": "financing",
+          "ltv_max": 0.75,
+          "promo_months": 18,
+          "subsidy_months": 12,
+          "subsidy_pct": 3.0
+        },
+        {
+          "kind": "evidence",
+          "doc_kinds": [
+            "so-hong",
+            "quy-hoach-1-500",
+            "gpxd"
+          ]
+        }
+      ],
+      "last_generated_at": "2026-05-22T00:00:00Z"
+    },
+    {
+      "internal_id": "lot_03019",
+      "slug": "f2-1-a-1",
+      "canonical_url": "https://bacninhhonghaccity.vn/sa-ban/hong-phat/lo/f2-1-a-1",
+      "indexable": false,
+      "_indexable_reason": "listing=staging, status=available, source=internal — noindex utility URL until CDT publishes",
+      "title": "Nhà phố liền kề F2-1-A-1 307m² — Hồng Phát",
+      "description": "Lô f2-1-a-1 phân khu Hồng Phát, diện tích 307m², hướng Tây Nam. Khám phá vị trí trên sa bàn tương tác Hồng Hạc City.",
+      "h1": "Nhà phố liền kề F2-1-A-1 307m² — Phân khu Hồng Phát",
+      "og_image_url": "https://cdn.bacninhhonghaccity.vn/og/lots/lot_03019.jpg",
+      "primary_keyword": "nhà phố liền kề F2-1-A-1 Hồng Phát",
+      "secondary_keywords": [
+        "nhà phố liền kề 307m² Bắc Ninh",
+        "F2-1-A-1 Hồng Hạc City giá",
+        "nhà phố liền kề sổ hồng từng căn Bắc Ninh"
+      ],
+      "long_tail_keywords": [
+        "nhà phố liền kề 307m² hướng tây nam Bắc Ninh",
+        "mua nhà phố liền kề f2-1-a-1 Hồng Hạc City có sổ hồng",
+        "nhà phố liền kề block f2-2 Hồng Phát",
+        "nhà phố liền kề hướng tốt Hồng Phát 307m²"
+      ],
+      "jsonld": {
+        "@context": "https://schema.org",
+        "@type": "Place",
+        "name": "Lô F2-1-A-1 307m² — Phân khu Hồng Phát",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Phường Song Liễu",
+          "addressRegion": "Bắc Ninh",
+          "addressCountry": "VN"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 21.0186015,
+          "longitude": 106.0158568
+        }
+      },
+      "breadcrumbs": [
+        {
+          "name": "Trang chủ",
+          "url": "/"
+        },
+        {
+          "name": "Sa bàn",
+          "url": "/sa-ban"
+        },
+        {
+          "name": "Hồng Phát",
+          "url": "/sa-ban/hong-phat"
+        },
+        {
+          "name": "Nhà phố liền kề F2-1-A-1",
+          "url": "/sa-ban/hong-phat/lo/f2-1-a-1"
+        }
+      ],
+      "internal_links": [
+        {
+          "url": "/sa-ban/hong-phat",
+          "anchor": "Xem trên sa bàn tương tác",
+          "priority": "P0"
+        },
+        {
+          "url": "/sa-ban/hong-phat?subZone=f2-2",
+          "anchor": "Các lô khác block F2-2",
+          "priority": "P1"
+        },
+        {
+          "url": "/sa-ban/hong-phat?kind=townhouse",
+          "anchor": "Các Nhà phố liền kề khác trong Hồng Phát",
+          "priority": "P1"
+        },
+        {
+          "url": "/phap-ly/so-hong",
+          "anchor": "100% sổ hồng từng căn",
+          "priority": "P0"
+        }
+      ],
+      "body_blocks": [
+        {
+          "kind": "specs",
+          "data": {
+            "area_m2": 307.0,
+            "frontage_m": 17.1,
+            "orientation": "SW",
+            "kind": "townhouse",
+            "sku": "F2-1-A-1",
+            "subZone": "f2-2"
+          }
+        },
+        {
+          "kind": "location",
+          "nearby_amenities": [
+            {
+              "name": "Công viên trung tâm",
+              "distance_m": "TODO_compute_from_geometry"
+            },
+            {
+              "name": "Trường liên cấp",
+              "distance_m": "TODO_compute_from_geometry"
+            },
+            {
+              "name": "Trung tâm thương mại",
+              "distance_m": "TODO_compute_from_geometry"
+            }
+          ]
+        },
+        {
+          "kind": "lifestyle_match",
+          "personas": [
+            "o-thuc"
+          ]
+        },
+        {
+          "kind": "financing",
+          "ltv_max": 0.75,
+          "promo_months": 18,
+          "subsidy_months": 12,
+          "subsidy_pct": 3.0
+        },
+        {
+          "kind": "evidence",
+          "doc_kinds": [
+            "so-hong",
+            "quy-hoach-1-500",
+            "gpxd"
+          ]
+        }
+      ],
+      "last_generated_at": "2026-05-22T00:00:00Z"
+    },
+    {
+      "internal_id": "lot_03026",
+      "slug": "f2-1-b-6",
+      "canonical_url": "https://bacninhhonghaccity.vn/sa-ban/hong-phat/lo/f2-1-b-6",
+      "indexable": false,
+      "_indexable_reason": "listing=staging, status=available, source=internal — noindex utility URL until CDT publishes",
+      "title": "Nhà phố compact F2-1-B-6 132m² — Hồng Phát",
+      "description": "Lô f2-1-b-6 phân khu Hồng Phát, diện tích 132m², hướng Đông Nam. Khám phá vị trí trên sa bàn tương tác Hồng Hạc City.",
+      "h1": "Nhà phố compact F2-1-B-6 132m² — Phân khu Hồng Phát",
+      "og_image_url": "https://cdn.bacninhhonghaccity.vn/og/lots/lot_03026.jpg",
+      "primary_keyword": "nhà phố compact F2-1-B-6 Hồng Phát",
+      "secondary_keywords": [
+        "nhà phố compact 132m² Bắc Ninh",
+        "F2-1-B-6 Hồng Hạc City giá",
+        "nhà phố compact sổ hồng từng căn Bắc Ninh"
+      ],
+      "long_tail_keywords": [
+        "nhà phố compact 132m² hướng đông nam Bắc Ninh",
+        "mua nhà phố compact f2-1-b-6 Hồng Hạc City có sổ hồng",
+        "nhà phố compact block f2-2 Hồng Phát",
+        "nhà phố compact hướng tốt Hồng Phát 132m²"
+      ],
+      "jsonld": {
+        "@context": "https://schema.org",
+        "@type": "Place",
+        "name": "Lô F2-1-B-6 132m² — Phân khu Hồng Phát",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Phường Song Liễu",
+          "addressRegion": "Bắc Ninh",
+          "addressCountry": "VN"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 21.0193092,
+          "longitude": 106.0181572
+        }
+      },
+      "breadcrumbs": [
+        {
+          "name": "Trang chủ",
+          "url": "/"
+        },
+        {
+          "name": "Sa bàn",
+          "url": "/sa-ban"
+        },
+        {
+          "name": "Hồng Phát",
+          "url": "/sa-ban/hong-phat"
+        },
+        {
+          "name": "Nhà phố compact F2-1-B-6",
+          "url": "/sa-ban/hong-phat/lo/f2-1-b-6"
+        }
+      ],
+      "internal_links": [
+        {
+          "url": "/sa-ban/hong-phat",
+          "anchor": "Xem trên sa bàn tương tác",
+          "priority": "P0"
+        },
+        {
+          "url": "/sa-ban/hong-phat?subZone=f2-2",
+          "anchor": "Các lô khác block F2-2",
+          "priority": "P1"
+        },
+        {
+          "url": "/sa-ban/hong-phat?kind=townhouse-compact",
+          "anchor": "Các Nhà phố compact khác trong Hồng Phát",
+          "priority": "P1"
+        },
+        {
+          "url": "/phap-ly/so-hong",
+          "anchor": "100% sổ hồng từng căn",
+          "priority": "P0"
+        }
+      ],
+      "body_blocks": [
+        {
+          "kind": "specs",
+          "data": {
+            "area_m2": 132.0,
+            "frontage_m": 7.3,
+            "orientation": "SE",
+            "kind": "townhouse-compact",
+            "sku": "F2-1-B-6",
+            "subZone": "f2-2"
+          }
+        },
+        {
+          "kind": "location",
+          "nearby_amenities": [
+            {
+              "name": "Công viên trung tâm",
+              "distance_m": "TODO_compute_from_geometry"
+            },
+            {
+              "name": "Trường liên cấp",
+              "distance_m": "TODO_compute_from_geometry"
+            },
+            {
+              "name": "Trung tâm thương mại",
+              "distance_m": "TODO_compute_from_geometry"
+            }
+          ]
+        },
+        {
+          "kind": "lifestyle_match",
+          "personas": [
+            "o-thuc"
+          ]
+        },
+        {
+          "kind": "financing",
+          "ltv_max": 0.75,
+          "promo_months": 18,
+          "subsidy_months": 12,
+          "subsidy_pct": 3.0
+        },
+        {
+          "kind": "evidence",
+          "doc_kinds": [
+            "so-hong",
+            "quy-hoach-1-500",
+            "gpxd"
+          ]
+        }
       ],
       "last_generated_at": "2026-05-22T00:00:00Z"
     }

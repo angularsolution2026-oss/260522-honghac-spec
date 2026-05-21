@@ -90,6 +90,94 @@ Hiện tại runtime project (localhost:3000) có **2830 polygons** staging via 
 
 ---
 
+## Current Status (2026-05-22)
+
+| Artifact | State | Size | Records |
+|---|---|---|---|
+| `_raw-advisory-lots.geojson` | ✅ Imported | 1.86 MB | 2830 features (raw) |
+| `hong-phat-lots-full.json` | ✅ Generated | 2.45 MB | 2449 lots (381 amenity excluded) |
+| `hong-phat-lots-index.json` | ✅ Generated | 296 KB | 2449 entries (LOD-optimized, < 500KB budget) |
+| `lot-seo-metadata.json` | ✅ Template + 5 samples | 23.9 KB | 0 pages emitted, 5 sample entries |
+| `NUMBERING-SCHEME.md` | ✅ Locked | — | 4-tier scheme |
+| `masterplan-197ha.geojson` | ⚠ PLACEHOLDER bbox | 1 KB | Pending 1/500 plan |
+| `hong-phat-boundary.geojson` | ⚠ PLACEHOLDER bbox | 1 KB | Pending 1/500 plan |
+| `types/honghac.ts` | ✅ Production | — | Canonical TS interfaces |
+| `constants/map-config.ts` | ✅ Production | — | 5-LOD rules + Macro/Micro |
+| `security/map-security-config.ts` | ✅ Production | — | 7-layer defense policy |
+| `scripts/derive-lot-codes.ts` | ✅ Production | — | 4-tier derivation utilities (runtime) |
+| `scripts/build-lots-index.mjs` | ✅ Production | — | Node ESM index builder (20ms / 2449 lots) |
+| `scripts/_build-lots-from-raw.py` | ✅ One-shot | — | Initial import (already run; archived) |
+| `scripts/_build-seo-metadata.py` | ✅ One-shot | — | SEO template generator (already run; archived) |
+
+### Composition of the 2449 lots (verified facts)
+
+**By status:**
+- 1489 available (60.8%)
+- 444 reserved (18.1%)
+- 516 sold (21.1%)
+
+**By kind (heuristic inference from area + frontage):**
+- 1380 townhouse-compact (<200m²)
+- 469 townhouse (200–336m²)
+- 268 villa-song-lap (200–290m² wide frontage)
+- 187 shophouse (≥336m²)
+- 145 villa-don-lap (290–420m² with frontage ≥12m)
+
+**By legacy subZone:**
+- 846 in f2-2
+- 615 in h1-3
+- 465 in gcx2
+- 273 in h2-3
+- 250 in hong-phat
+
+### Currently indexable for SEO
+
+**0 lots.** All 2449 entries are `listing=staging`, `display_source=internal`. Indexability gate flips only when:
+- CDT 1/500 plan delivered → polygon verified → `display_source=official`
+- Phase status moves to `open` → `listing=public`
+- Status ≠ `sold` (sold lots become noindex after 90 days)
+
+Expected indexable count after CDT publishes Hồng Phát Phase 1: ~250–500 lots initially (the 250 `subZone=hong-phat` tagged + subset of others as phase opens).
+
+---
+
+## Migration Steps
+
+### Phase A — Today (DONE)
+- [x] Crawl 2830 polygons from runtime `/tiles/advisory-lots.geojson`
+- [x] Generate `hong-phat-lots-full.json` with 4-tier numbering applied
+- [x] Generate `hong-phat-lots-index.json` (LOD manifest)
+- [x] Generate 5 SEO sample entries to validate template
+- [x] Document numbering scheme + verification gaps
+
+### Phase B — Next 1–2 days
+- [ ] Confirm block → subdivision mapping with CDT (h1-3, f2-2, gcx2 → ?)
+- [ ] Receive 1/500 plan PDF + extract verified polygon geometry
+- [ ] Re-run `_build-lots-from-raw.py` against canonical coordinates (currently offset `+194m E, −114m N`)
+- [ ] Filter canary lots and add 5 canary entries with `internal_id` prefix `cn-hhc-`
+- [ ] Seed Payload Postgres `lots` collection via `payload/seed/003-lots-hong-phat.ts`
+
+### Phase C — Tech infrastructure (1 week)
+- [ ] Build PMTiles archive `hhc.v{YYYYMMDD}.pmtiles` via tippecanoe from full.json
+- [ ] Implement `/api/map/manifest`, `/api/map/tile/[z]/[x]/[y]`, `/api/map/lot/[id]` per security config
+- [ ] Mount MapLibre `<MapCanvas>` with 5-LOD layer rules from `constants/map-config.ts`
+- [ ] Write `scripts/generate-lot-seo.mjs` → emit 2449 MDX or Payload Pages records
+- [ ] Activate `0 3 * * 1` cron for canary detection
+
+### Phase D — CDT data sync (2–4 weeks, dep. on CDT)
+- [ ] Cross-reference each polygon with official 1/500 boundary
+- [ ] For matched: flip `display_source=internal → official`, `last_official_sync=<timestamp>`
+- [ ] Re-generate public_code for any block renames; emit 301 redirects in `lot_url_aliases`
+- [ ] Populate `official_lot_code` when sales contract codes available
+
+### Phase E — Public launch
+- [ ] Phase status `announced → open` for Hồng Phát tiểu khu 1
+- [ ] Lots in opened phase flip `listing=staging → public`
+- [ ] Regenerate sitemap-sa-ban.xml; submit to GSC
+- [ ] Monitor: indexed pages count, lot popover open rate, AI Matching usage
+
+---
+
 ## Files explicitly marked PLACEHOLDER
 
 Theo nguyên tắc "không bịa tọa độ":
