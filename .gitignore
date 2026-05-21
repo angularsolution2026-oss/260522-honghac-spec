@@ -1,0 +1,30 @@
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Node / build artifacts
+node_modules/
+.next/
+out/
+dist/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Claude Code local state (keep skills, exclude session/cache)
+.claude/settings.local.json
+.claude/.cache/
+.claude/agents/local/
+
+# Temp
+*.tmp
+*.bak
