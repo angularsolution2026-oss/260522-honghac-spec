@@ -63,11 +63,11 @@ export interface MapContainerProps {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// PMTiles URL — falls back to empty string when env var not set (dev mock mode).
+// PMTiles URL — defaults to local /tiles/hhc.pmtiles for dev, CDN for production
 // ─────────────────────────────────────────────────────────────────────────────
 
 const PMTILES_URL =
-  process.env.NEXT_PUBLIC_PMTILES_URL ?? '';
+  process.env.NEXT_PUBLIC_PMTILES_URL || '/tiles/hhc.pmtiles';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Component
@@ -400,7 +400,7 @@ function addSources(map: MapLibreMap): void {
 // ─────────────────────────────────────────────────────────────────────────────
 // addLayers — adds all managed layers with initial visibility = 'none'.
 // LOD engine controls visibility at runtime.
-// ─────────────────────────────────────────────────────────────────────────────
+// ───────────────────��─────────────────────────────────────────────────────────
 
 function addLayers(map: MapLibreMap): void {
   const sourceLayer = PMTILES_URL ? 'lots' : undefined;

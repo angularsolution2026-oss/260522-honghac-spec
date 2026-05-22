@@ -21,6 +21,7 @@ import type { FilterState } from '@/lib/map/lod-engine';
 import { DEFAULT_FILTER_STATE } from '@/lib/map/lod-engine';
 import SaBanHeader from './SaBanHeader';
 import MapStatusBar from './MapStatusBar';
+import FilterRail from '@/components/map/FilterRail';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Mock lot data — replaced by /api/map/lot-detail in Task 8
@@ -118,24 +119,13 @@ export default function SaBanClient() {
         {/* ── Status bar — bottom-left ────────────────────────────────────── */}
         <MapStatusBar mode={mapMode} selectedLotId={selectedLot?.internal_id ?? null} />
 
-        {/* ── Filter Rail placeholder — left rail ─────────────────────────── */}
-        <aside
-          className="pointer-events-none absolute left-4 top-4 z-10 w-64 rounded-lg p-4 opacity-70"
-          style={{
-            backgroundColor: 'var(--color-surface)',
-            border: '1px solid var(--color-border)',
-          }}
-        >
-          <p
-            className="text-xs font-semibold uppercase tracking-widest"
-            style={{ color: 'var(--color-foreground-tertiary)' }}
-          >
-            Filter Rail
-          </p>
-          <p className="mt-1 text-xs" style={{ color: 'var(--color-foreground-secondary)' }}>
-            Phase 1 Task 6 — coming next
-          </p>
-        </aside>
+        {/* ── Filter Rail — left panel (Desktop) / bottom drawer (Mobile) ─── */}
+        <FilterRail
+          filters={filters}
+          onFiltersChange={setFilters}
+          activeSubdivision={activeSubdivision}
+          className="absolute left-4 top-4 z-10"
+        />
 
         {/* ── Lot Popover ─────────────────────────────────────────────────── */}
         {selectedLot && (
