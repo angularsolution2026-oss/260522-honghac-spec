@@ -102,15 +102,9 @@ export default function SaBanClient() {
   }, [handleLotStatusChange]);
 
   return (
-    <div
-      className="fixed inset-0 flex flex-col overflow-hidden"
-      style={{ backgroundColor: 'var(--color-background)' }}
-    >
-      {/* ── Header ─────────────────────────────────────────────────────────── */}
+    <div className="flex h-screen w-screen flex-col bg-background">
+      {/* ── Header ──────────────────────────────────────────────────────────── */}
       <SaBanHeader
-        theme={theme}
-        onThemeChange={setTheme}
-        activeSubdivision={activeSubdivision}
         onSubdivisionChange={(id) => {
           setActiveSubdivision(id);
           if (id) mapRef.current?.fitSubdivision(id);
@@ -119,7 +113,7 @@ export default function SaBanClient() {
       />
 
       {/* ── Map area ────────────────────────────────────────────────────────── */}
-      <div className="relative flex-1 overflow-hidden">
+      <div className="relative flex flex-1 overflow-hidden" style={{ minHeight: 0 }}>
         {/* Map canvas */}
         <MapLoader
           ref={mapRef}
@@ -129,7 +123,7 @@ export default function SaBanClient() {
           onLotClick={handleLotClick}
           onModeChange={handleModeChange}
           onMapReady={handleMapReady}
-          className="absolute inset-0"
+          className="absolute inset-0 z-0 w-full h-full"
         />
 
         {/* ── Status bar — bottom-left ────────────────────────────────────── */}

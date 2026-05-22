@@ -231,6 +231,11 @@ const MapContainer = forwardRef<MapContainerHandle, MapContainerProps>(
             addSources(map);
             addLayers(map);
 
+            // DEBUG: Force layers visible BEFORE LOD (bypass any ẩn logic)
+            map.setLayoutProperty('lots-fill', 'visibility', 'visible');
+            map.setLayoutProperty('lots-outline', 'visibility', 'visible');
+            console.log('[v0] Forced lots-fill & lots-outline to visible');
+
             // Debug: Check rendered features
             setTimeout(() => {
               const features = map.queryRenderedFeatures({ layers: ['lots-fill', 'lots-outline'] });
@@ -252,6 +257,10 @@ const MapContainer = forwardRef<MapContainerHandle, MapContainerProps>(
             };
             const lodConfig = getLodLayerConfig(camera, filtersRef.current);
             applyLodToMap(map, lodConfig);
+
+            // FORCE VISIBLE AGAIN after LOD (override)
+            map.setLayoutProperty('lots-fill', 'visibility', 'visible');
+            map.setLayoutProperty('lots-outline', 'visibility', 'visible');
           } catch (err) {
             console.warn('[v0] Error adding sources/layers (non-fatal):', err);
           }
@@ -348,6 +357,7 @@ const MapContainer = forwardRef<MapContainerHandle, MapContainerProps>(
         className={`relative w-full h-full ${className}`}
         aria-label="Bản đồ tương tác Hồng Hạc City"
         role="application"
+        data-testid="map-container"
       />
     );
   },
