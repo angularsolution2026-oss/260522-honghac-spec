@@ -182,18 +182,6 @@ const MapContainer = forwardRef<MapContainerHandle, MapContainerProps>(
         const maplibregl = await import('maplibre-gl');
         const { Map, NavigationControl } = maplibregl;
         console.log('[v0] MapContainer: maplibre-gl imported');
-        
-        const { Protocol } = await import('pmtiles');
-        console.log('[v0] MapContainer: pmtiles imported');
-
-        // Register PMTiles protocol globally (idempotent)
-        // MapLibre GL v4 uses addProtocol as a module-level function
-        if (!(globalThis as Record<string, unknown>).__pmtilesRegistered) {
-          const protocol = new Protocol();
-          maplibregl.addProtocol('pmtiles', protocol.tile.bind(protocol));
-          (globalThis as Record<string, unknown>).__pmtilesRegistered = true;
-          console.log('[v0] MapContainer: PMTiles protocol registered');
-        }
 
         const initial = INITIAL_CAMERA['/sa-ban'];
         const styleUrl = MAP_STYLE_URLS[theme] ?? MAP_STYLE_URLS['day'];
@@ -359,34 +347,19 @@ export default MapContainer;
 // ─────────────────────────────────────────────────────────────────────────────
 
 function addSources(map: MapLibreMap): void {
-  // PMTiles source — covers full 197ha lot geometry
+  // GeoJSON source — load Hong Phat lots directly from public/data/
   if (!map.getSource('hhc-lots')) {
-    const tilesUrl = PMTILES_URL
-      ? `pmtiles://${PMTILES_URL}`
-      : ''; // no-op in dev until file is provided
-
-    if (tilesUrl) {
-      try {
-        map.addSource('hhc-lots', {
-          type: 'vector',
-          url: tilesUrl,
-          maxzoom: 20,
-          promoteId: 'internal_id',
-        });
-        console.log('[v0] PMTiles source added successfully');
-      } catch (err) {
-        console.warn('[v0] Failed to add PMTiles source, falling back to empty GeoJSON:', err);
-        // Fallback to empty GeoJSON so layers don't error
-        map.addSource('hhc-lots', {
-          type: 'geojson',
-          data: { type: 'FeatureCollection', features: [] },
-          promoteId: 'internal_id',
-          generateId: false,
-        });
-      }
-    } else {
-      // Dev mock: empty GeoJSON source so layers don't error
-      console.log('[v0] No PMTiles URL, using empty GeoJSON source');
+    try {
+      map.addSource('hhc-lots', {
+        type: 'geojson',
+        data: '/data/hong-phat-lots.geojson',
+        promoteId: 'internal_id',
+        generateId: false,
+      });
+      console.log('[v0] GeoJSON source loaded from /data/hong-phat-lots.geojson');
+    } catch (err) {
+      console.warn('[v0] Failed to add GeoJSON source:', err);
+      // Fallback to empty GeoJSON if file fails
       map.addSource('hhc-lots', {
         type: 'geojson',
         data: { type: 'FeatureCollection', features: [] },
@@ -400,18 +373,15 @@ function addSources(map: MapLibreMap): void {
 // ─────────────────────────────────────────────────────────────────────────────
 // addLayers — adds all managed layers with initial visibility = 'none'.
 // LOD engine controls visibility at runtime.
-// ───────────────────��─────────────────────────────────────────────────────────
+// ─────────────��─────��─────────────────────────────────────────────────────────
 
 function addLayers(map: MapLibreMap): void {
-  const sourceLayer = PMTILES_URL ? 'lots' : undefined;
-
   // Lots fill polygon
   if (!map.getLayer('lots-fill')) {
     map.addLayer({
       id: 'lots-fill',
       type: 'fill',
       source: 'hhc-lots',
-      ...(sourceLayer ? { 'source-layer': sourceLayer } : {}),
       layout: { visibility: 'none' },
       paint: {
         'fill-color': '#22c55e',
@@ -426,7 +396,6 @@ function addLayers(map: MapLibreMap): void {
       id: 'lots-outline',
       type: 'line',
       source: 'hhc-lots',
-      ...(sourceLayer ? { 'source-layer': sourceLayer } : {}),
       layout: { visibility: 'none' },
       paint: {
         'line-color': '#ffffff',
@@ -442,7 +411,7 @@ function addLayers(map: MapLibreMap): void {
       id: 'lots-dots',
       type: 'circle',
       source: 'hhc-lots',
-      ...(sourceLayer ? { 'source-layer': sourceLayer } : {}),
+      
       layout: { visibility: 'none' },
       paint: {
         'circle-radius': 4,
@@ -458,7 +427,7 @@ function addLayers(map: MapLibreMap): void {
       id: 'lot-status-overlay',
       type: 'fill',
       source: 'hhc-lots',
-      ...(sourceLayer ? { 'source-layer': sourceLayer } : {}),
+      
       layout: { visibility: 'none' },
       paint: {
         'fill-color': [
@@ -484,7 +453,7 @@ function addLayers(map: MapLibreMap): void {
       id: 'lots-staging-overlay',
       type: 'fill',
       source: 'hhc-lots',
-      ...(sourceLayer ? { 'source-layer': sourceLayer } : {}),
+      
       filter: ['==', ['get', 'listing'], 'staging'],
       layout: { visibility: 'none' },
       paint: {
@@ -500,7 +469,7 @@ function addLayers(map: MapLibreMap): void {
       id: 'lots-spotlight-pulse',
       type: 'line',
       source: 'hhc-lots',
-      ...(sourceLayer ? { 'source-layer': sourceLayer } : {}),
+      
       layout: { visibility: 'none' },
       paint: {
         'line-color': '#d4af37', // gold accent
@@ -516,7 +485,7 @@ function addLayers(map: MapLibreMap): void {
       id: 'lot-labels',
       type: 'symbol',
       source: 'hhc-lots',
-      ...(sourceLayer ? { 'source-layer': sourceLayer } : {}),
+      
       layout: {
         visibility: 'none',
         'text-field': ['get', 'area_label'],
