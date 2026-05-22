@@ -176,9 +176,14 @@ const MapContainer = forwardRef<MapContainerHandle, MapContainerProps>(
       let map: MapLibreMap;
 
       async function initMap() {
+        console.log('[v0] MapContainer: starting initMap');
+        
         // Dynamic imports — MapLibre GL is heavy (~600KB), load on demand
         const { Map, NavigationControl } = await import('maplibre-gl');
+        console.log('[v0] MapContainer: maplibre-gl imported');
+        
         const { Protocol } = await import('pmtiles');
+        console.log('[v0] MapContainer: pmtiles imported');
 
         // Register PMTiles protocol globally (idempotent)
         const protocol = new Protocol();
@@ -193,6 +198,7 @@ const MapContainer = forwardRef<MapContainerHandle, MapContainerProps>(
 
         const initial = INITIAL_CAMERA['/sa-ban'];
         const styleUrl = MAP_STYLE_URLS[theme] ?? MAP_STYLE_URLS['day'];
+        console.log('[v0] MapContainer: using styleUrl =', styleUrl);
 
         map = new Map({
           container: containerRef.current!,
@@ -215,11 +221,13 @@ const MapContainer = forwardRef<MapContainerHandle, MapContainerProps>(
         });
 
         mapRef.current = map;
+        console.log('[v0] MapContainer: Map instance created');
 
         // Navigation controls
         map.addControl(new NavigationControl({ showCompass: true }), 'top-right');
 
         map.on('load', () => {
+          console.log('[v0] MapContainer: map.load event fired');
           addSources(map);
           addLayers(map);
 
@@ -263,10 +271,18 @@ const MapContainer = forwardRef<MapContainerHandle, MapContainerProps>(
       }
 
       initMap().catch((err) => {
-        console.error('[MapContainer] init failed:', err);
+        console.error('[v0] MapContainer init failed:', err);
       });
 
+      // Timeout fallback — if map doesn't load within 10s, log error
+      const timeout = setTimeout(() => {
+        if (!mapRef.current?.isStyleLoaded()) {
+          console.error('[v0] MapContainer timeout: style not loaded after 10s');
+        }
+      }, 10000);
+
       return () => {
+        clearTimeout(timeout);
         if (mapRef.current) {
           mapRef.current.remove();
           mapRef.current = null;
