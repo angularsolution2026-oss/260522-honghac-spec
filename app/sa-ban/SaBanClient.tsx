@@ -11,14 +11,15 @@
 
 'use client';
 
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback, useEffect } from 'react';
 import MapLoader from '@/components/map/MapLoader';
 import LotPopover from '@/components/map/LotPopover';
 import type { MapContainerHandle, LotClickPayload, MapTheme } from '@/components/map/map-types';
 import type { LotPopoverData } from '@/components/map/LotPopover';
-import type { SubdivisionId } from '@/data/types/honghac';
+import type { SubdivisionId, LotStatus } from '@/data/types/honghac';
 import type { FilterState } from '@/lib/map/lod-engine';
 import { DEFAULT_FILTER_STATE } from '@/lib/map/lod-engine';
+import { createMockLotStatusUpdate } from '@/lib/firestore/use-lot-realtime-sync';
 import SaBanHeader from './SaBanHeader';
 import MapStatusBar from './MapStatusBar';
 import FilterRail from '@/components/map/FilterRail';
@@ -64,6 +65,15 @@ export default function SaBanClient() {
   // Watchlist (IndexedDB in Task 7 — mock Set for now)
   const [watchlist, setWatchlist] = useState<Set<string>>(new Set());
 
+  // Real-time lot status updates (Task 7 demo)
+  const [lotStatusMap, setLotStatusMap] = useState<Map<string, LotStatus>>(new Map());
+
+  const handleLotStatusChange = useCallback((internalId: string, newStatus: LotStatus) => {
+    console.log(`[v0] handleLotStatusChange: ${internalId} → ${newStatus}`);
+    setLotStatusMap(prev => new Map(prev).set(internalId, newStatus));
+    // TODO: Update map layer styling when status changes
+  }, []);
+
   const handleWatchlist = useCallback((lotId: string) => {
     setWatchlist(prev => {
       const next = new Set(prev);
@@ -84,6 +94,12 @@ export default function SaBanClient() {
   const handleMapReady = useCallback(() => {
     mapRef.current?.fitSubdivision('hong-phat');
   }, []);
+
+  // Test Sync button handler — simulates real-time lot status updates
+  const handleTestSync = useCallback(() => {
+    const allLotIds = Array.from({ length: 1074 }, (_, i) => `HP-${String(i + 1).padStart(4, '0')}`);
+    createMockLotStatusUpdate(allLotIds, handleLotStatusChange);
+  }, [handleLotStatusChange]);
 
   return (
     <div
@@ -138,6 +154,20 @@ export default function SaBanClient() {
             inWatchlist={watchlist.has(selectedLot.internal_id)}
           />
         )}
+
+        {/* ── Test Sync Button — Phase 1 Task 7 demo (bottom-right) ──────── */}
+        <button
+          onClick={handleTestSync}
+          className="pointer-events-auto absolute bottom-4 right-4 z-10 rounded-lg px-3 py-2 text-sm font-medium transition-all hover:scale-105"
+          style={{
+            backgroundColor: 'var(--color-primary)',
+            color: 'var(--color-surface)',
+            boxShadow: '0 2px 8px rgb(0 0 0 / 0.15)',
+          }}
+          title="Simulate real-time lot status updates (Phase 1 Task 7)"
+        >
+          Test Sync
+        </button>
       </div>
     </div>
   );
