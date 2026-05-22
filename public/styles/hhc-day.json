@@ -2,10 +2,8 @@
   "version": 8,
   "name": "HHC Day",
   "metadata": {
-    "description": "Hồng Hạc City — light day theme. Uses OpenFreeMap Positron tiles."
+    "description": "Hồng Hạc City — light day theme. Uses OpenStreetMap raster tiles."
   },
-  "glyphs": "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
-  "sprite": "https://demotiles.maplibre.org/sprite/sprite",
   "sources": {
     "osm-positron": {
       "type": "raster",
