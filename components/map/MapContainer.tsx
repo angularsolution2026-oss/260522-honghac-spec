@@ -179,22 +179,21 @@ const MapContainer = forwardRef<MapContainerHandle, MapContainerProps>(
         console.log('[v0] MapContainer: starting initMap');
         
         // Dynamic imports — MapLibre GL is heavy (~600KB), load on demand
-        const { Map, NavigationControl } = await import('maplibre-gl');
+        const maplibregl = await import('maplibre-gl');
+        const { Map, NavigationControl } = maplibregl;
         console.log('[v0] MapContainer: maplibre-gl imported');
         
         const { Protocol } = await import('pmtiles');
         console.log('[v0] MapContainer: pmtiles imported');
 
         // Register PMTiles protocol globally (idempotent)
-        const protocol = new Protocol();
-        // MapLibre.addProtocol is available on the class level
-        // Only register once per page lifetime
-        (Map as unknown as { _pmtilesRegistered?: boolean })._pmtilesRegistered ||= (() => {
-          (
-            Map as unknown as { addProtocol: (name: string, fn: unknown) => void }
-          ).addProtocol('pmtiles', protocol.tile.bind(protocol));
-          return true;
-        })();
+        // MapLibre GL v4 uses addProtocol as a module-level function
+        if (!(globalThis as Record<string, unknown>).__pmtilesRegistered) {
+          const protocol = new Protocol();
+          maplibregl.addProtocol('pmtiles', protocol.tile.bind(protocol));
+          (globalThis as Record<string, unknown>).__pmtilesRegistered = true;
+          console.log('[v0] MapContainer: PMTiles protocol registered');
+        }
 
         const initial = INITIAL_CAMERA['/sa-ban'];
         const styleUrl = MAP_STYLE_URLS[theme] ?? MAP_STYLE_URLS['day'];
