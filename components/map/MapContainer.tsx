@@ -223,29 +223,48 @@ const MapContainer = forwardRef<MapContainerHandle, MapContainerProps>(
         mapRef.current = map;
         console.log('[v0] MapContainer: Map instance created');
 
+        // Handle map errors (e.g., failed tile fetches) gracefully
+        map.on('error', (e) => {
+          console.warn('[v0] MapLibre error (non-fatal):', e.error?.message || e);
+          // Don't crash — map continues with base OSM tiles
+        });
+
         // Navigation controls
         map.addControl(new NavigationControl({ showCompass: true }), 'top-right');
 
         map.on('load', () => {
           console.log('[v0] MapContainer: map.load event fired');
-          addSources(map);
-          addLayers(map);
+          clearTimeout(loadTimeout);
+          try {
+            addSources(map);
+            addLayers(map);
 
-          // Run LOD engine for initial state
-          const bounds = map.getBounds();
-          const camera: CameraState = {
-            zoom: map.getZoom(),
-            viewport_bbox: [
-              bounds.getWest(), bounds.getSouth(),
-              bounds.getEast(), bounds.getNorth(),
-            ],
-            focused_subdivision: activeSubdivisionRef.current,
-          };
-          const lodConfig = getLodLayerConfig(camera, filtersRef.current);
-          applyLodToMap(map, lodConfig);
-
+            // Run LOD engine for initial state
+            const bounds = map.getBounds();
+            const camera: CameraState = {
+              zoom: map.getZoom(),
+              viewport_bbox: [
+                bounds.getWest(), bounds.getSouth(),
+                bounds.getEast(), bounds.getNorth(),
+              ],
+              focused_subdivision: activeSubdivisionRef.current,
+            };
+            const lodConfig = getLodLayerConfig(camera, filtersRef.current);
+            applyLodToMap(map, lodConfig);
+          } catch (err) {
+            console.warn('[v0] Error adding sources/layers (non-fatal):', err);
+          }
           onMapReady?.(map);
         });
+
+        // Fallback: if load event doesn't fire within 8s, call onMapReady anyway
+        // This handles cases where style/tiles fail but we still want to show the map shell
+        const loadTimeout = setTimeout(() => {
+          if (!map.isStyleLoaded()) {
+            console.warn('[v0] Map load timeout — forcing onMapReady without full style');
+            onMapReady?.(map);
+          }
+        }, 8000);
 
         // Camera events → LOD recalc
         map.on('zoom', handleCameraChange);
@@ -348,14 +367,27 @@ function addSources(map: MapLibreMap): void {
       : ''; // no-op in dev until file is provided
 
     if (tilesUrl) {
-      map.addSource('hhc-lots', {
-        type: 'vector',
-        url: tilesUrl,
-        maxzoom: 20,
-        promoteId: 'internal_id',
-      });
+      try {
+        map.addSource('hhc-lots', {
+          type: 'vector',
+          url: tilesUrl,
+          maxzoom: 20,
+          promoteId: 'internal_id',
+        });
+        console.log('[v0] PMTiles source added successfully');
+      } catch (err) {
+        console.warn('[v0] Failed to add PMTiles source, falling back to empty GeoJSON:', err);
+        // Fallback to empty GeoJSON so layers don't error
+        map.addSource('hhc-lots', {
+          type: 'geojson',
+          data: { type: 'FeatureCollection', features: [] },
+          promoteId: 'internal_id',
+          generateId: false,
+        });
+      }
     } else {
       // Dev mock: empty GeoJSON source so layers don't error
+      console.log('[v0] No PMTiles URL, using empty GeoJSON source');
       map.addSource('hhc-lots', {
         type: 'geojson',
         data: { type: 'FeatureCollection', features: [] },
