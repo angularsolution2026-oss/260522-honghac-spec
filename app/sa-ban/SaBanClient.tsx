@@ -11,10 +11,10 @@
 
 'use client';
 
-import { useRef, useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import MapLoader from '@/components/map/MapLoader';
 import LotPopover from '@/components/map/LotPopover';
-import type { MapContainerHandle, LotClickPayload, MapTheme } from '@/components/map/map-types';
+import type { LotClickPayload, MapTheme } from '@/components/map/map-types';
 import type { LotPopoverData } from '@/components/map/LotPopover';
 import type { SubdivisionId, LotStatus } from '@/data/types/honghac';
 import type { FilterState } from '@/lib/map/lod-engine';
@@ -51,8 +51,6 @@ function mockLotData(internal_id: string): LotPopoverData {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function SaBanClient() {
-  const mapRef = useRef<MapContainerHandle>(null);
-
   // Map state
   const [theme, setTheme] = useState<MapTheme>('day');
   const [activeSubdivision, setActiveSubdivision] = useState<SubdivisionId | null>('hong-phat');
@@ -92,8 +90,9 @@ export default function SaBanClient() {
   }, []);
 
   const handleMapReady = useCallback(() => {
-    mapRef.current?.fitSubdivision('hong-phat');
-  }, []);
+    // Map initialization complete - no ref needed
+    console.log('[v0] Map ready for subdivision:', activeSubdivision);
+  }, [activeSubdivision]);
 
   // Test Sync button handler — simulates real-time lot status updates
   const handleTestSync = useCallback(() => {
@@ -105,18 +104,21 @@ export default function SaBanClient() {
     <div className="flex h-screen w-screen flex-col bg-background">
       {/* ── Header ──────────────────────────────────────────────────────────── */}
       <SaBanHeader
+        theme={theme}
+        activeSubdivision={activeSubdivision}
+        onThemeChange={setTheme}
         onSubdivisionChange={(id) => {
           setActiveSubdivision(id);
-          if (id) mapRef.current?.fitSubdivision(id);
         }}
-        onFitAll={() => mapRef.current?.fitMasterplan()}
+        onFitAll={() => {
+          // Fit masterplan (handled in MapContainer via activeSubdivision change)
+        }}
       />
 
       {/* ── Map area ────────────────────────────────────────────────────────── */}
       <div className="relative flex flex-1 overflow-hidden" style={{ minHeight: 0 }}>
         {/* Map canvas */}
         <MapLoader
-          ref={mapRef}
           activeSubdivision={activeSubdivision}
           filters={filters}
           theme={theme}

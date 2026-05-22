@@ -4,35 +4,22 @@
  * MapLibre GL JS accesses `window` and `WebGL` on import, which crashes
  * Next.js SSR. This wrapper uses `next/dynamic` with `ssr: false` so the
  * component is only evaluated in the browser.
- *
- * Usage:
- *   import MapLoader from '@/components/map/MapLoader'
- *   <MapLoader activeSubdivision="hong-phat" onLotClick={...} />
  */
 
 'use client';
 
 import dynamic from 'next/dynamic';
 import type { MapContainerProps } from './MapContainer';
-import type { MapContainerHandle } from './map-types';
-import { forwardRef } from 'react';
-import type { ForwardRefExoticComponent, RefAttributes } from 'react';
 
 // Dynamically import MapContainer with SSR disabled
-const DynamicMap = dynamic(() => import('./MapContainer'), {
+const MapContainer = dynamic(() => import('./MapContainer'), {
   ssr: false,
   loading: () => <MapLoadingPlaceholder />,
-}) as ForwardRefExoticComponent<MapContainerProps & RefAttributes<MapContainerHandle>>;
+});
 
-// Re-export with forwardRef support preserved
-const MapLoader = forwardRef<MapContainerHandle, MapContainerProps>(
-  function MapLoader(props, ref) {
-    return <DynamicMap {...props} ref={ref} />;
-  },
-);
-
-MapLoader.displayName = 'MapLoader';
-export default MapLoader;
+export default function MapLoader(props: MapContainerProps) {
+  return <MapContainer {...props} />;
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Loading placeholder — shown while MapLibre GL chunk is downloading
