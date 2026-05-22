@@ -1,0 +1,35 @@
+{
+  "name": "v0-project",
+  "version": "1.0.0",
+  "description": "Decision platform for Bắc Ninh real estate — **core product:** Interactive Urban Decision Map (`/sa-ban`).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/angularsolution2026-oss/260522-honghac-spec.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/angularsolution2026-oss/260522-honghac-spec/issues"
+  },
+  "homepage": "https://github.com/angularsolution2026-oss/260522-honghac-spec#readme",
+  "dependencies": {
+    "next": "^15.5.18",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "@types/react": "^19.2.15",
+    "@types/react-dom": "^19.2.3",
+    "autoprefixer": "^10.5.0",
+    "postcss": "^8.5.15",
+    "tailwindcss": "^4.3.0",
+    "typescript": "^5.9.3"
+  }
+}
