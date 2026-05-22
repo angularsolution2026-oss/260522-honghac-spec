@@ -61,6 +61,17 @@
   --color-lot-reserved:  oklch(0.69 0.17 59);    /* amber */
   --color-lot-sold:      oklch(0.57 0.18 29);    /* red */
 
+  /* ── Phase / lot status (alias set used by LotPopover & LOD engine) ──────── */
+  --color-phase-available: oklch(0.58 0.15 142);  /* green-500 equivalent */
+  --color-phase-reserved:  oklch(0.69 0.17 59);   /* amber-500 */
+  --color-phase-sold:      oklch(0.57 0.18 29);   /* red-500 */
+  --color-phase-upcoming:  oklch(0.58 0.13 257);  /* blue-500 */
+
+  /* ── Lot popover ─────────────────────────────────────────────────────────── */
+  --color-popover-bg:     oklch(1 0 0);
+  --color-popover-border: oklch(0.88 0.01 252);
+  --shadow-popover:       0 8px 32px -4px rgb(0 0 0 / 0.18), 0 2px 8px -2px rgb(0 0 0 / 0.1);
+
   /* ── Border radius ───────────────────────────────────────────────────────── */
   --radius-xs:   2px;
   --radius-sm:   4px;

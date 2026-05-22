@@ -5,26 +5,48 @@
  *   - activeSubdivision (which phan-khu is focused)
  *   - mapTheme (day / dusk / aerial)
  *   - filters (FilterState from FilterRail — Phase 1 Task 6)
- *   - selectedLot (clicked lot id — feeds LotPopover — Phase 1 Task 5)
- *
- * Renders:
- *   - Fixed full-viewport layout
- *   - MapLoader (SSR-safe MapContainer)
- *   - SaBanHeader (theme switcher + breadcrumb)
- *   - MapStatusBar (mode indicator + lot count)
- *   - Placeholder slots for FilterRail + LotPopover (next tasks)
+ *   - selectedLot (clicked lot — feeds LotPopover — Phase 1 Task 5)
+ *   - watchlist (mock Set — IndexedDB in Task 7)
  */
 
 'use client';
 
 import { useRef, useState, useCallback } from 'react';
 import MapLoader from '@/components/map/MapLoader';
+import LotPopover from '@/components/map/LotPopover';
 import type { MapContainerHandle, LotClickPayload, MapTheme } from '@/components/map/map-types';
+import type { LotPopoverData } from '@/components/map/LotPopover';
 import type { SubdivisionId } from '@/data/types/honghac';
 import type { FilterState } from '@/lib/map/lod-engine';
 import { DEFAULT_FILTER_STATE } from '@/lib/map/lod-engine';
 import SaBanHeader from './SaBanHeader';
 import MapStatusBar from './MapStatusBar';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Mock lot data — replaced by /api/map/lot-detail in Task 8
+// ─────────────────────────────────────────────────────────────────────────────
+
+function mockLotData(internal_id: string): LotPopoverData {
+  return {
+    internal_id,
+    official_lot_code: internal_id.startsWith('HP') ? internal_id : null,
+    sku: 'VILLA-A',
+    kind: 'villa-don-lap',
+    area_m2: 320,
+    frontage_m: 12,
+    orientation: 'SE',
+    status: 'available',
+    price_indicative_vnd: 18_500_000_000,
+    is_corner_lot: false,
+    is_park_facing: true,
+    subdivision: 'hong-phat',
+    listing: 'public',
+  };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Component
+// ─────────────────────────────────────────────────────────────────────────────
 
 export default function SaBanClient() {
   const mapRef = useRef<MapContainerHandle>(null);
@@ -35,8 +57,20 @@ export default function SaBanClient() {
   const [mapMode, setMapMode] = useState<'macro' | 'micro'>('macro');
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTER_STATE);
 
-  // Selected lot — will open LotPopover
+  // Selected lot — opens LotPopover
   const [selectedLot, setSelectedLot] = useState<LotClickPayload | null>(null);
+
+  // Watchlist (IndexedDB in Task 7 — mock Set for now)
+  const [watchlist, setWatchlist] = useState<Set<string>>(new Set());
+
+  const handleWatchlist = useCallback((lotId: string) => {
+    setWatchlist(prev => {
+      const next = new Set(prev);
+      if (next.has(lotId)) next.delete(lotId);
+      else next.add(lotId);
+      return next;
+    });
+  }, []);
 
   const handleLotClick = useCallback((payload: LotClickPayload) => {
     setSelectedLot(payload);
@@ -47,13 +81,15 @@ export default function SaBanClient() {
   }, []);
 
   const handleMapReady = useCallback(() => {
-    // Fly to Hồng Phát on load
     mapRef.current?.fitSubdivision('hong-phat');
   }, []);
 
   return (
-    <div className="fixed inset-0 flex flex-col overflow-hidden" style={{ backgroundColor: 'var(--color-background)' }}>
-      {/* ── Header ───────────────────────────────────────────────────── */}
+    <div
+      className="fixed inset-0 flex flex-col overflow-hidden"
+      style={{ backgroundColor: 'var(--color-background)' }}
+    >
+      {/* ── Header ─────────────────────────────────────────────────────────── */}
       <SaBanHeader
         theme={theme}
         onThemeChange={setTheme}
@@ -65,7 +101,7 @@ export default function SaBanClient() {
         onFitAll={() => mapRef.current?.fitMasterplan()}
       />
 
-      {/* ── Map area ─────────────────────────────────────────────────── */}
+      {/* ── Map area ────────────────────────────────────────────────────────── */}
       <div className="relative flex-1 overflow-hidden">
         {/* Map canvas */}
         <MapLoader
@@ -79,15 +115,21 @@ export default function SaBanClient() {
           className="absolute inset-0"
         />
 
-        {/* ── Status bar ── bottom-left ─────────────────────────────── */}
+        {/* ── Status bar — bottom-left ────────────────────────────────────── */}
         <MapStatusBar mode={mapMode} selectedLotId={selectedLot?.internal_id ?? null} />
 
-        {/* ── Filter Rail placeholder ── left rail ──────────────────── */}
+        {/* ── Filter Rail placeholder — left rail ─────────────────────────── */}
         <aside
           className="pointer-events-none absolute left-4 top-4 z-10 w-64 rounded-lg p-4 opacity-70"
-          style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)' }}
+          style={{
+            backgroundColor: 'var(--color-surface)',
+            border: '1px solid var(--color-border)',
+          }}
         >
-          <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--color-foreground-tertiary)' }}>
+          <p
+            className="text-xs font-semibold uppercase tracking-widest"
+            style={{ color: 'var(--color-foreground-tertiary)' }}
+          >
             Filter Rail
           </p>
           <p className="mt-1 text-xs" style={{ color: 'var(--color-foreground-secondary)' }}>
@@ -95,32 +137,16 @@ export default function SaBanClient() {
           </p>
         </aside>
 
-        {/* ── Lot Popover placeholder ── right ──────────────────────── */}
+        {/* ── Lot Popover ─────────────────────────────────────────────────── */}
         {selectedLot && (
-          <div
-            className="pointer-events-auto absolute right-4 top-4 z-20 w-72 rounded-lg p-4 shadow-lg"
-            style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)' }}
-          >
-            <div className="flex items-center justify-between">
-              <p className="text-sm font-semibold" style={{ fontFamily: 'var(--font-serif)', color: 'var(--color-primary)' }}>
-                Lô: {selectedLot.internal_id}
-              </p>
-              <button
-                onClick={() => setSelectedLot(null)}
-                className="rounded p-1 text-xs hover:opacity-70"
-                style={{ color: 'var(--color-foreground-tertiary)' }}
-                aria-label="Đóng"
-              >
-                ✕
-              </button>
-            </div>
-            <p className="mt-1 text-xs" style={{ color: 'var(--color-foreground-secondary)' }}>
-              LotPopover component — Phase 1 Task 5
-            </p>
-            <p className="mt-1 text-xs font-mono" style={{ color: 'var(--color-foreground-tertiary)' }}>
-              [{selectedLot.lnglat[0].toFixed(5)}, {selectedLot.lnglat[1].toFixed(5)}]
-            </p>
-          </div>
+          <LotPopover
+            payload={selectedLot}
+            data={mockLotData(selectedLot.internal_id)}
+            loading={false}
+            onClose={() => setSelectedLot(null)}
+            onWatchlist={handleWatchlist}
+            inWatchlist={watchlist.has(selectedLot.internal_id)}
+          />
         )}
       </div>
     </div>
