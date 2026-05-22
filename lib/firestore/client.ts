@@ -8,31 +8,38 @@ import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
  * Uses env vars from `.env.local`:
  *   - NEXT_PUBLIC_FIREBASE_API_KEY
  *   - NEXT_PUBLIC_FIREBASE_PROJECT_ID
- *   - NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
- * etc.
+ *   - etc.
  *
  * In Dev, can connect to local emulator if env var set.
+ * If config is incomplete, will skip initialization and log warning.
  */
 
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || '',
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || '',
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || '',
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || '',
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || '',
 };
 
-// Initialize Firebase App
-export const firebaseApp = initializeApp(firebaseConfig);
+// Check if config is complete
+const isConfigComplete = Object.values(firebaseConfig).every(v => v);
 
-// Get Firestore instance
-export const firestoreDb = getFirestore(firebaseApp);
+if (!isConfigComplete) {
+  console.warn('[v0] Firebase config incomplete — skipping Firestore initialization');
+}
 
-// Connect to emulator in development (if env var set)
-if (process.env.NEXT_PUBLIC_FIRESTORE_EMULATOR_HOST && typeof window !== 'undefined') {
+// Initialize Firebase App only if config is complete
+export const firebaseApp = isConfigComplete ? initializeApp(firebaseConfig) : null;
+
+// Get Firestore instance only if app initialized
+export const firestoreDb = firebaseApp ? getFirestore(firebaseApp) : null;
+
+// Connect to emulator in development (if enabled and app initialized)
+if (firebaseApp && process.env.NEXT_PUBLIC_FIRESTORE_EMULATOR_HOST && typeof window !== 'undefined') {
   const [host, port] = process.env.NEXT_PUBLIC_FIRESTORE_EMULATOR_HOST.split(':');
   try {
-    connectFirestoreEmulator(firestoreDb, host, parseInt(port, 10));
+    connectFirestoreEmulator(firestoreDb!, host, parseInt(port, 10));
     console.log('[v0] Firestore connected to emulator:', process.env.NEXT_PUBLIC_FIRESTORE_EMULATOR_HOST);
   } catch (err: unknown) {
     // Already connected, or error — silently continue

@@ -183,7 +183,12 @@ const MapContainer = forwardRef<MapContainerHandle, MapContainerProps>(
         const { Map, NavigationControl } = maplibregl;
         console.log('[v0] MapContainer: maplibre-gl imported');
 
-        const initial = INITIAL_CAMERA['/sa-ban'];
+        const initial = INITIAL_CAMERA['/sa-ban'] || {
+          longitude: 106.020475,  // Hong Phat center
+          latitude: 21.0142439,   // Hong Phat center
+          zoom: 15.5,             // Close enough to see lots clearly
+        };
+        console.log('[v0] MapContainer: using camera position:', initial);
         const styleUrl = MAP_STYLE_URLS[theme] ?? MAP_STYLE_URLS['day'];
         console.log('[v0] MapContainer: using styleUrl =', styleUrl);
 
@@ -225,6 +230,15 @@ const MapContainer = forwardRef<MapContainerHandle, MapContainerProps>(
           try {
             addSources(map);
             addLayers(map);
+
+            // Debug: Check rendered features
+            setTimeout(() => {
+              const features = map.queryRenderedFeatures({ layers: ['lots-fill', 'lots-outline'] });
+              console.log('[v0] Rendered features in lots-fill & lots-outline:', features.length);
+              if (features.length === 0) {
+                console.warn('[v0] No features rendered! Check layer visibility and zoom level');
+              }
+            }, 500);
 
             // Run LOD engine for initial state
             const bounds = map.getBounds();
@@ -376,33 +390,35 @@ function addSources(map: MapLibreMap): void {
 // ─────────────��─────��─────────────────────────────────────────────────────────
 
 function addLayers(map: MapLibreMap): void {
-  // Lots fill polygon
+  // Lots fill polygon — ALWAYS VISIBLE for now (bypass LOD)
   if (!map.getLayer('lots-fill')) {
     map.addLayer({
       id: 'lots-fill',
       type: 'fill',
       source: 'hhc-lots',
-      layout: { visibility: 'none' },
+      layout: { visibility: 'visible' },
       paint: {
-        'fill-color': '#22c55e',
-        'fill-opacity': 0.55,
+        'fill-color': '#eab308',
+        'fill-opacity': 0.6,
       },
     });
+    console.log('[v0] lots-fill layer added and set to visible');
   }
 
-  // Lots outline
+  // Lots outline — ALWAYS VISIBLE for now (bypass LOD)
   if (!map.getLayer('lots-outline')) {
     map.addLayer({
       id: 'lots-outline',
       type: 'line',
       source: 'hhc-lots',
-      layout: { visibility: 'none' },
+      layout: { visibility: 'visible' },
       paint: {
-        'line-color': '#ffffff',
-        'line-width': 0.8,
-        'line-opacity': 0.7,
+        'line-color': '#000000',
+        'line-width': 1,
+        'line-opacity': 0.8,
       },
     });
+    console.log('[v0] lots-outline layer added and set to visible');
   }
 
   // Lots dots (macro-close mode)

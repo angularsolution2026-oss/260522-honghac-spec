@@ -22,8 +22,8 @@ export function useLotRealtimeSync(
   onLotStatusChange: (internalId: string, newStatus: LotStatus) => void,
 ) {
   useEffect(() => {
-    if (!activeSubdivision) {
-      console.log('[v0] useLotRealtimeSync: no active subdivision, skipping listener');
+    if (!firestoreDb || !activeSubdivision) {
+      console.log('[v0] useLotRealtimeSync: Firestore not initialized or no subdivision');
       return;
     }
 
