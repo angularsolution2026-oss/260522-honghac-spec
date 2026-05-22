@@ -1,0 +1,32 @@
+{
+  "version": 8,
+  "name": "HHC Aerial",
+  "glyphs": "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
+  "sprite": "https://demotiles.maplibre.org/sprite/sprite",
+  "sources": {
+    "osm-aerial": {
+      "type": "raster",
+      "tiles": [
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+      ],
+      "tileSize": 256,
+      "attribution": "© Esri, Maxar, Earthstar Geographics",
+      "maxzoom": 19
+    }
+  },
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": { "background-color": "#0a0a0a" }
+    },
+    {
+      "id": "base-aerial-raster",
+      "type": "raster",
+      "source": "osm-aerial",
+      "paint": {
+        "raster-opacity": 0.95
+      }
+    }
+  ]
+}

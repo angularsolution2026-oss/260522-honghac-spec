@@ -25,6 +25,8 @@ import {
 } from 'react';
 import type { Map as MapLibreMap, MapMouseEvent, MapGeoJSONFeature } from 'maplibre-gl';
 import type { SubdivisionId } from '@/data/types/honghac';
+import type { MapTheme, LotClickPayload, MapContainerHandle } from './map-types';
+export type { MapTheme, LotClickPayload, MapContainerHandle };
 import {
   HHC_MASTERPLAN_BBOX,
   INITIAL_CAMERA,
@@ -44,17 +46,6 @@ import type { FilterState, CameraState } from '@/lib/map/lod-engine';
 // Types
 // ─────────────────────────────────────────────────────────────────────────────
 
-export type MapTheme = 'day' | 'dusk' | 'aerial';
-
-export interface LotClickPayload {
-  internal_id: string;
-  /** Pixel position of click — used to position the popover. */
-  screen_x: number;
-  screen_y: number;
-  /** Lot centroid [lng, lat] — used for camera fly-to. */
-  lnglat: [number, number];
-}
-
 export interface MapContainerProps {
   /** Which subdivision is "in focus" — controls LOD transitions. */
   activeSubdivision: SubdivisionId | null;
@@ -69,14 +60,6 @@ export interface MapContainerProps {
   /** Called after map + sources fully loaded. */
   onMapReady?: (map: MapLibreMap) => void;
   className?: string;
-}
-
-/** Imperative handle for parent to fly camera programmatically. */
-export interface MapContainerHandle {
-  flyTo(center: [number, number], zoom: number, duration?: number): void;
-  fitSubdivision(id: SubdivisionId): void;
-  fitMasterplan(): void;
-  getMap(): MapLibreMap | null;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -119,7 +102,7 @@ const MapContainer = forwardRef<MapContainerHandle, MapContainerProps>(
         mapRef.current?.flyTo({ center, zoom, duration });
       },
       fitSubdivision(id) {
-        const bbox = SUBDIVISION_BBOX[id];
+        const bbox = SUBDIVISION_BBOX[id as SubdivisionId];
         mapRef.current?.fitBounds(
           [bbox.west, bbox.south, bbox.east, bbox.north],
           { padding: 60, duration: MAP_MODE_TRANSITION.transition_duration_ms },
@@ -133,7 +116,7 @@ const MapContainer = forwardRef<MapContainerHandle, MapContainerProps>(
         );
       },
       getMap() {
-        return mapRef.current;
+        return mapRef.current as MapLibreMap | null;
       },
     }));
 

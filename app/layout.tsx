@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Cormorant_Garamond, Inter } from 'next/font/google';
 import '@/styles/globals.css';
+import 'maplibre-gl/dist/maplibre-gl.css';
 
 /* ============================================================================
    Font Loading (Section 11.2)
