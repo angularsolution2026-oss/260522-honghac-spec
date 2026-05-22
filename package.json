@@ -1,7 +1,7 @@
 {
   "name": "v0-project",
   "version": "1.0.0",
-  "description": "Decision platform for Bắc Ninh real estate — **core product:** Interactive Urban Decision Map (`/sa-ban`).",
+  "description": "Decision platform for Bắc Ninh real estate — core product: Interactive Urban Decision Map (/sa-ban).",
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
@@ -17,25 +17,25 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
   "bugs": {
     "url": "https://github.com/angularsolution2026-oss/260522-honghac-spec/issues"
   },
   "homepage": "https://github.com/angularsolution2026-oss/260522-honghac-spec#readme",
   "dependencies": {
-    "lucide-react": "^1.16.0",
-    "next": "^15.5.18",
-    "react": "^19.2.6",
-    "react-dom": "^19.2.6"
+    "lucide-react": "^0.475.0",
+    "next": "^15.3.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.7",
     "@types/geojson": "^7946.0.16",
-    "@types/node": "^25.9.1",
+    "@types/node": "^20.19.41",
     "@types/react": "^19.2.15",
     "@types/react-dom": "^19.2.3",
-    "autoprefixer": "^10.5.0",
-    "postcss": "^8.5.15",
-    "tailwindcss": "^4.3.0",
-    "typescript": "^5.9.3"
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^4.1.7",
+    "typescript": "^5.7.3"
   }
 }

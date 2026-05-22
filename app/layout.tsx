@@ -116,20 +116,6 @@ export default function RootLayout({
       className={`${cormorantGaramond.variable} ${inter.variable} bg-background`}
       suppressHydrationWarning
     >
-      <head>
-        <meta charSet="utf-8" />
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/site.webmanifest" />
-        <script
-          async
-          src="https://cdn.jsdelivr.net/npm/maplibre-gl@latest/dist/maplibre-gl.js"
-        />
-        <link
-          href="https://cdn.jsdelivr.net/npm/maplibre-gl@latest/dist/maplibre-gl.css"
-          rel="stylesheet"
-        />
-      </head>
       <body className="text-foreground">
         {children}
       </body>

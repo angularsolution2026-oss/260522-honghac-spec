@@ -1,182 +1,167 @@
 @import 'tailwindcss';
 
-/* ============================================================================
-   11. DESIGN SYSTEM: Semantic Design Tokens (Section 11.1–11.3)
-   
-   Color Palette (OKLCH): Luxury real estate aesthetic
-   - Primary: Dark luxury green (#1a472a → OKLCH(0.31, 0.09, 152))
-   - Accent: Gold (#d4af37 → OKLCH(0.75, 0.12, 70))
-   - Neutrals: Warm whites to near-black
-   
-   Typography:
-   - Headings: Cormorant Garamond (serif, elegant)
-   - Body: Inter (sans-serif, readable)
-   
-   Spacing: 8px base unit (Tailwind default)
-   Radius: 4px (sm), 8px (md), 12px (lg)
-   ============================================================================ */
+/*
+  ============================================================================
+  11. DESIGN SYSTEM: Semantic Design Tokens (Section 11.1-11.3)
+
+  Color Palette (OKLCH): Luxury real estate aesthetic
+    Primary  : Dark luxury green (#1a472a)
+    Accent   : Gold (#d4af37)
+    Neutrals : Warm whites to near-black
+
+  Typography:
+    Headings : Cormorant Garamond (serif, elegant)
+    Body     : Inter (sans-serif, readable)
+
+  Spacing  : 8px base unit (Tailwind default)
+  Radius   : xs 2px / sm 4px / md 8px / lg 12px / xl 16px
+  ============================================================================
+*/
 
 @theme inline {
-  /* Fonts */
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-serif: 'Cormorant Garamond', serif;
-  --font-mono: 'Monaco', 'Menlo', 'Courier New', monospace;
+  /* ── Fonts ─────────────────────────────────────────────────────────────── */
+  --font-sans:  'Inter', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-mono:  'Monaco', 'Menlo', 'Courier New', monospace;
 
-  /* Color palette (OKLCH) */
-  --color-primary: oklch(0.31 0.09 152);           /* #1a472a dark luxury green */
-  --color-primary-light: oklch(0.45 0.07 152);    /* Lighter variant for hovers */
-  --color-primary-dark: oklch(0.18 0.10 152);     /* Darker variant for active */
+  /* ── Primary: dark luxury green ─────────────────────────────────────────── */
+  --color-primary:       oklch(0.31 0.09 152);   /* #1a472a */
+  --color-primary-light: oklch(0.45 0.07 152);
+  --color-primary-dark:  oklch(0.18 0.10 152);
 
-  --color-accent: oklch(0.75 0.12 70);            /* #d4af37 gold */
-  --color-accent-light: oklch(0.82 0.10 70);      /* Light gold for hovers */
-  --color-accent-dark: oklch(0.68 0.14 70);       /* Dark gold for active */
+  /* ── Accent: gold ────────────────────────────────────────────────────────── */
+  --color-accent:       oklch(0.75 0.12 70);    /* #d4af37 */
+  --color-accent-light: oklch(0.82 0.10 70);
+  --color-accent-dark:  oklch(0.68 0.14 70);
 
-  /* Neutrals (warm whites to near-black) */
-  --color-background: oklch(0.98 0.01 252);       /* #faf8f5 warm white */
-  --color-surface: oklch(1 0 0);                   /* #ffffff pure white */
-  --color-surface-secondary: oklch(0.96 0.01 252);/* #f2eff0 warm light gray */
-  --color-surface-tertiary: oklch(0.92 0.01 252); /* #ebe7e3 warm gray */
+  /* ── Surfaces & backgrounds ─────────────────────────────────────────────── */
+  --color-background:          oklch(0.98 0.01 252);   /* #faf8f5 warm white */
+  --color-surface:             oklch(1    0    0);      /* pure white */
+  --color-surface-secondary:   oklch(0.96 0.01 252);   /* #f2eff0 */
+  --color-surface-tertiary:    oklch(0.92 0.01 252);   /* #ebe7e3 */
 
-  --color-foreground: oklch(0.08 0.01 252);       /* #131311 near-black */
-  --color-foreground-secondary: oklch(0.35 0.01 252); /* #595856 dark gray */
-  --color-foreground-tertiary: oklch(0.55 0.01 252); /* #8b8985 medium gray */
+  /* ── Text ────────────────────────────────────────────────────────────────── */
+  --color-foreground:           oklch(0.08 0.01 252);  /* #131311 near-black */
+  --color-foreground-secondary: oklch(0.35 0.01 252);  /* #595856 */
+  --color-foreground-tertiary:  oklch(0.55 0.01 252);  /* #8b8985 */
 
-  --color-muted: oklch(0.72 0.01 252);            /* #b8b5b2 muted gray */
-  --color-muted-foreground: oklch(0.45 0.01 252);/* #6d6a68 muted dark */
+  /* ── Borders & muted ─────────────────────────────────────────────────────── */
+  --color-muted:             oklch(0.72 0.01 252);  /* #b8b5b2 */
+  --color-muted-foreground:  oklch(0.45 0.01 252);  /* #6d6a68 */
+  --color-border:            oklch(0.88 0.01 252);  /* light border */
 
-  /* Semantic status colors */
-  --color-success: oklch(0.58 0.15 142);          /* Green for positive actions */
-  --color-warning: oklch(0.69 0.17 59);           /* Warm orange for cautions */
-  --color-error: oklch(0.57 0.18 29);             /* Red for errors */
-  --color-info: oklch(0.58 0.13 257);             /* Blue for information */
+  /* ── Status ──────────────────────────────────────────────────────────────── */
+  --color-success: oklch(0.58 0.15 142);
+  --color-warning: oklch(0.69 0.17 59);
+  --color-error:   oklch(0.57 0.18 29);
+  --color-info:    oklch(0.58 0.13 257);
 
-  /* Spacing (8px base unit) */
-  --spacing-0: 0px;
-  --spacing-1: 4px;
-  --spacing-2: 8px;
-  --spacing-3: 12px;
-  --spacing-4: 16px;
-  --spacing-5: 20px;
-  --spacing-6: 24px;
-  --spacing-8: 32px;
-  --spacing-10: 40px;
-  --spacing-12: 48px;
-  --spacing-16: 64px;
-  --spacing-20: 80px;
-  --spacing-24: 96px;
-  --spacing-32: 128px;
+  /* ── Map lot status ──────────────────────────────────────────────────────── */
+  --color-lot-available: oklch(0.58 0.15 142);   /* green */
+  --color-lot-reserved:  oklch(0.69 0.17 59);    /* amber */
+  --color-lot-sold:      oklch(0.57 0.18 29);    /* red */
 
-  /* Border radius */
-  --radius-xs: 2px;
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-2xl: 20px;
+  /* ── Border radius ───────────────────────────────────────────────────────── */
+  --radius-xs:   2px;
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-2xl:  20px;
   --radius-full: 9999px;
 
-  /* Shadows (depth & elevation) */
+  /* ── Shadows ─────────────────────────────────────────────────────────────── */
   --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 
-  /* Typography scales */
-  --font-size-xs: 0.75rem;
-  --font-size-sm: 0.875rem;
-  --font-size-base: 1rem;
-  --font-size-lg: 1.125rem;
-  --font-size-xl: 1.25rem;
-  --font-size-2xl: 1.5rem;
-  --font-size-3xl: 1.875rem;
-  --font-size-4xl: 2.25rem;
-  --font-size-5xl: 3rem;
-
-  --line-height-tight: 1.25;
-  --line-height-snug: 1.375;
-  --line-height-normal: 1.5;
-  --line-height-relaxed: 1.625;
-  --line-height-loose: 2;
-
-  /* Z-index scale (map interactions) */
-  --z-index-base: 0;
-  --z-index-dropdown: 1000;
-  --z-index-sticky: 1020;
-  --z-index-fixed: 1030;
-  --z-index-modal-backdrop: 1040;
-  --z-index-modal: 1050;
-  --z-index-popover: 1060;
-  --z-index-tooltip: 1070;
-  --z-index-notification: 1080;
+  /* ── Z-index scale ───────────────────────────────────────────────────────── */
+  --z-base:             0;
+  --z-dropdown:         1000;
+  --z-sticky:           1020;
+  --z-fixed:            1030;
+  --z-modal-backdrop:   1040;
+  --z-modal:            1050;
+  --z-popover:          1060;
+  --z-tooltip:          1070;
+  --z-notification:     1080;
 }
 
 /* ============================================================================
-   Global Reset & Base Styles
+   Global reset & base styles
    ============================================================================ */
 
-* {
-  @apply border-color-muted;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  border-color: var(--color-border);
 }
 
 html {
-  @apply bg-background text-foreground;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  @apply font-sans antialiased;
-  line-height: var(--line-height-normal);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+  min-height: 100dvh;
 }
 
-/* Semantic typography */
+/* Headings use serif font */
 h1, h2, h3, h4, h5, h6 {
-  @apply font-serif font-bold text-balance;
+  font-family: var(--font-serif);
+  font-weight: 700;
+  text-wrap: balance;
+  color: var(--color-foreground);
 }
 
-h1 {
-  @apply text-5xl leading-tight;
-}
-
-h2 {
-  @apply text-4xl leading-snug;
-}
-
-h3 {
-  @apply text-3xl leading-snug;
-}
-
-h4 {
-  @apply text-2xl leading-normal;
-}
-
-h5, h6 {
-  @apply text-xl leading-normal;
-}
+h1 { font-size: 3rem;    line-height: 1.15; }
+h2 { font-size: 2.25rem; line-height: 1.2;  }
+h3 { font-size: 1.875rem;line-height: 1.25; }
+h4 { font-size: 1.5rem;  line-height: 1.3;  }
+h5 { font-size: 1.25rem; line-height: 1.4;  }
+h6 { font-size: 1.125rem;line-height: 1.4;  }
 
 p {
-  @apply text-base leading-relaxed;
+  line-height: 1.625;
 }
 
 a {
-  @apply text-accent underline transition-colors hover:text-accent-light focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2;
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 150ms ease;
 }
 
-button {
-  @apply transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2;
+a:hover {
+  color: var(--color-accent-light);
 }
 
-input, textarea, select {
-  @apply bg-surface border border-color-muted rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent;
+a:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
 }
 
-/* Utility classes */
-.text-balance {
-  text-wrap: balance;
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
-.text-pretty {
-  text-wrap: pretty;
+img, video {
+  max-width: 100%;
+  height: auto;
 }
 
 /* Accessibility: screen reader only */
@@ -190,11 +175,4 @@ input, textarea, select {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
-}
-
-/* Smooth scroll behavior for anchors */
-@supports (scroll-behavior: smooth) {
-  html {
-    scroll-behavior: smooth;
-  }
 }
