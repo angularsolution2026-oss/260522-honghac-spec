@@ -1,0 +1,504 @@
+'use client';
+
+/**
+ * MapContainer — MapLibre GL JS host component.
+ *
+ * Responsibilities:
+ *   1. Init MapLibre GL instance + PMTiles protocol registration.
+ *   2. Add GeoJSON / PMTiles sources and managed layer stack.
+ *   3. Drive LOD engine on every camera change.
+ *   4. Expose onLotClick + onLotHover callbacks up to the page.
+ *   5. Sync FilterState → LOD engine → live map layers.
+ *
+ * What this component does NOT do:
+ *   - Render any React children inside the map canvas.
+ *   - Store lead / watchlist state (lifted to /sa-ban/page.tsx).
+ *   - Handle popover rendering (sibling component, positioned via portal).
+ */
+
+import {
+  useEffect,
+  useRef,
+  useCallback,
+  forwardRef,
+  useImperativeHandle,
+} from 'react';
+import type { Map as MapLibreMap, MapMouseEvent, MapGeoJSONFeature } from 'maplibre-gl';
+import type { SubdivisionId } from '@/data/types/honghac';
+import {
+  HHC_MASTERPLAN_BBOX,
+  INITIAL_CAMERA,
+  MAP_STYLE_URLS,
+  MAP_MODE_TRANSITION,
+  SUBDIVISION_BBOX,
+} from '@/data/constants/map-config';
+import {
+  getLodLayerConfig,
+  applyLodToMap,
+  resolveMapMode,
+  DEFAULT_FILTER_STATE,
+} from '@/lib/map/lod-engine';
+import type { FilterState, CameraState } from '@/lib/map/lod-engine';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Types
+// ─────────────────────────────────────────────────────────────────────────────
+
+export type MapTheme = 'day' | 'dusk' | 'aerial';
+
+export interface LotClickPayload {
+  internal_id: string;
+  /** Pixel position of click — used to position the popover. */
+  screen_x: number;
+  screen_y: number;
+  /** Lot centroid [lng, lat] — used for camera fly-to. */
+  lnglat: [number, number];
+}
+
+export interface MapContainerProps {
+  /** Which subdivision is "in focus" — controls LOD transitions. */
+  activeSubdivision: SubdivisionId | null;
+  /** Filter state from FilterRail. */
+  filters?: FilterState;
+  /** Map color theme. */
+  theme?: MapTheme;
+  /** Called when user clicks a lot polygon or dot. */
+  onLotClick?: (payload: LotClickPayload) => void;
+  /** Called when map mode transitions macro ↔ micro. */
+  onModeChange?: (mode: 'macro' | 'micro') => void;
+  /** Called after map + sources fully loaded. */
+  onMapReady?: (map: MapLibreMap) => void;
+  className?: string;
+}
+
+/** Imperative handle for parent to fly camera programmatically. */
+export interface MapContainerHandle {
+  flyTo(center: [number, number], zoom: number, duration?: number): void;
+  fitSubdivision(id: SubdivisionId): void;
+  fitMasterplan(): void;
+  getMap(): MapLibreMap | null;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PMTiles URL — falls back to empty string when env var not set (dev mock mode).
+// ─────────────────────────────────────────────────────────────────────────────
+
+const PMTILES_URL =
+  process.env.NEXT_PUBLIC_PMTILES_URL ?? '';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Component
+// ─────────────────────────────────────────────────────────────────────────────
+
+const MapContainer = forwardRef<MapContainerHandle, MapContainerProps>(
+  function MapContainer(
+    {
+      activeSubdivision,
+      filters = DEFAULT_FILTER_STATE,
+      theme = 'day',
+      onLotClick,
+      onModeChange,
+      onMapReady,
+      className = '',
+    },
+    ref,
+  ) {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const mapRef = useRef<MapLibreMap | null>(null);
+    const currentModeRef = useRef<'macro' | 'micro'>('macro');
+    const filtersRef = useRef<FilterState>(filters);
+    const activeSubdivisionRef = useRef<SubdivisionId | null>(activeSubdivision);
+
+    // Keep refs in sync with latest props (avoids stale closures in event handlers)
+    filtersRef.current = filters;
+    activeSubdivisionRef.current = activeSubdivision;
+
+    // ── Imperative handle ──────────────────────────────────────────────────
+    useImperativeHandle(ref, () => ({
+      flyTo(center, zoom, duration = MAP_MODE_TRANSITION.transition_duration_ms) {
+        mapRef.current?.flyTo({ center, zoom, duration });
+      },
+      fitSubdivision(id) {
+        const bbox = SUBDIVISION_BBOX[id];
+        mapRef.current?.fitBounds(
+          [bbox.west, bbox.south, bbox.east, bbox.north],
+          { padding: 60, duration: MAP_MODE_TRANSITION.transition_duration_ms },
+        );
+      },
+      fitMasterplan() {
+        const b = HHC_MASTERPLAN_BBOX;
+        mapRef.current?.fitBounds(
+          [b.west, b.south, b.east, b.north],
+          { padding: 40, duration: MAP_MODE_TRANSITION.transition_duration_ms },
+        );
+      },
+      getMap() {
+        return mapRef.current;
+      },
+    }));
+
+    // ── Camera change handler (LOD + mode) ────────────────────────────────
+    const handleCameraChange = useCallback(() => {
+      const map = mapRef.current;
+      if (!map) return;
+
+      const zoom = map.getZoom();
+      const bounds = map.getBounds();
+      const camera: CameraState = {
+        zoom,
+        viewport_bbox: [
+          bounds.getWest(),
+          bounds.getSouth(),
+          bounds.getEast(),
+          bounds.getNorth(),
+        ],
+        focused_subdivision: activeSubdivisionRef.current,
+      };
+
+      // Compute new mode and emit if changed
+      const newMode = resolveMapMode(camera);
+      if (newMode !== currentModeRef.current) {
+        currentModeRef.current = newMode;
+        onModeChange?.(newMode);
+      }
+
+      // Apply LOD config
+      const lodConfig = getLodLayerConfig(camera, filtersRef.current);
+      applyLodToMap(map, lodConfig);
+    }, [onModeChange]);
+
+    // ── Lot click handler ─────────────────────────────────────────────────
+    const handleLotClick = useCallback(
+      (e: MapMouseEvent & { features?: MapGeoJSONFeature[] }) => {
+        const feature = e.features?.[0];
+        if (!feature || !feature.properties) return;
+
+        const internal_id = feature.properties['internal_id'] as string | undefined;
+        if (!internal_id) return;
+
+        onLotClick?.({
+          internal_id,
+          screen_x: e.point.x,
+          screen_y: e.point.y,
+          lnglat: [e.lngLat.lng, e.lngLat.lat],
+        });
+      },
+      [onLotClick],
+    );
+
+    // ── Map initialization ────────────────────────────────────────────────
+    useEffect(() => {
+      if (!containerRef.current || mapRef.current) return;
+
+      let map: MapLibreMap;
+
+      async function initMap() {
+        // Dynamic imports — MapLibre GL is heavy (~600KB), load on demand
+        const { Map, NavigationControl } = await import('maplibre-gl');
+        const { Protocol } = await import('pmtiles');
+
+        // Register PMTiles protocol globally (idempotent)
+        const protocol = new Protocol();
+        // MapLibre.addProtocol is available on the class level
+        // Only register once per page lifetime
+        (Map as unknown as { _pmtilesRegistered?: boolean })._pmtilesRegistered ||= (() => {
+          (
+            Map as unknown as { addProtocol: (name: string, fn: unknown) => void }
+          ).addProtocol('pmtiles', protocol.tile.bind(protocol));
+          return true;
+        })();
+
+        const initial = INITIAL_CAMERA['/sa-ban'];
+        const styleUrl = MAP_STYLE_URLS[theme] ?? MAP_STYLE_URLS['day'];
+
+        map = new Map({
+          container: containerRef.current!,
+          // When no style file exists yet (dev), fall back to a reliable blank style
+          style: styleUrl,
+          center: initial.center,
+          zoom: initial.zoom,
+          bearing: initial.bearing,
+          pitch: initial.pitch,
+          maxBounds: [
+            HHC_MASTERPLAN_BBOX.west - 0.05,
+            HHC_MASTERPLAN_BBOX.south - 0.05,
+            HHC_MASTERPLAN_BBOX.east + 0.05,
+            HHC_MASTERPLAN_BBOX.north + 0.05,
+          ],
+          // Performance: disable unnecessary features
+          antialias: false,
+          refreshExpiredTiles: false,
+          attributionControl: false,
+        });
+
+        mapRef.current = map;
+
+        // Navigation controls
+        map.addControl(new NavigationControl({ showCompass: true }), 'top-right');
+
+        map.on('load', () => {
+          addSources(map);
+          addLayers(map);
+
+          // Run LOD engine for initial state
+          const bounds = map.getBounds();
+          const camera: CameraState = {
+            zoom: map.getZoom(),
+            viewport_bbox: [
+              bounds.getWest(), bounds.getSouth(),
+              bounds.getEast(), bounds.getNorth(),
+            ],
+            focused_subdivision: activeSubdivisionRef.current,
+          };
+          const lodConfig = getLodLayerConfig(camera, filtersRef.current);
+          applyLodToMap(map, lodConfig);
+
+          onMapReady?.(map);
+        });
+
+        // Camera events → LOD recalc
+        map.on('zoom', handleCameraChange);
+        map.on('move', handleCameraChange);
+
+        // Lot click on fill + dots layers
+        map.on('click', 'lots-fill', handleLotClick);
+        map.on('click', 'lots-dots', handleLotClick);
+
+        // Pointer cursor on hover
+        map.on('mouseenter', 'lots-fill', () => {
+          map.getCanvas().style.cursor = 'pointer';
+        });
+        map.on('mouseleave', 'lots-fill', () => {
+          map.getCanvas().style.cursor = '';
+        });
+        map.on('mouseenter', 'lots-dots', () => {
+          map.getCanvas().style.cursor = 'pointer';
+        });
+        map.on('mouseleave', 'lots-dots', () => {
+          map.getCanvas().style.cursor = '';
+        });
+      }
+
+      initMap().catch((err) => {
+        console.error('[MapContainer] init failed:', err);
+      });
+
+      return () => {
+        if (mapRef.current) {
+          mapRef.current.remove();
+          mapRef.current = null;
+        }
+      };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // Run once on mount
+
+    // ── Re-apply LOD when filters / activeSubdivision change ─────────────
+    useEffect(() => {
+      const map = mapRef.current;
+      if (!map || !map.isStyleLoaded()) return;
+
+      const bounds = map.getBounds();
+      const camera: CameraState = {
+        zoom: map.getZoom(),
+        viewport_bbox: [
+          bounds.getWest(), bounds.getSouth(),
+          bounds.getEast(), bounds.getNorth(),
+        ],
+        focused_subdivision: activeSubdivision,
+      };
+      const lodConfig = getLodLayerConfig(camera, filters);
+      applyLodToMap(map, lodConfig);
+    }, [filters, activeSubdivision]);
+
+    // ── Theme change — reload style ───────────────────────────────────────
+    useEffect(() => {
+      const map = mapRef.current;
+      if (!map) return;
+      const styleUrl = MAP_STYLE_URLS[theme] ?? MAP_STYLE_URLS['day'];
+      map.setStyle(styleUrl);
+      // Re-add sources/layers after style reload
+      map.once('styledata', () => {
+        addSources(map);
+        addLayers(map);
+      });
+    }, [theme]);
+
+    return (
+      <div
+        ref={containerRef}
+        className={`relative w-full h-full ${className}`}
+        aria-label="Bản đồ tương tác Hồng Hạc City"
+        role="application"
+      />
+    );
+  },
+);
+
+MapContainer.displayName = 'MapContainer';
+export default MapContainer;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// addSources — idempotent, safe to call after style reload
+// ─────────────────────────────────────────────────────────────────────────────
+
+function addSources(map: MapLibreMap): void {
+  // PMTiles source — covers full 197ha lot geometry
+  if (!map.getSource('hhc-lots')) {
+    const tilesUrl = PMTILES_URL
+      ? `pmtiles://${PMTILES_URL}`
+      : ''; // no-op in dev until file is provided
+
+    if (tilesUrl) {
+      map.addSource('hhc-lots', {
+        type: 'vector',
+        url: tilesUrl,
+        maxzoom: 20,
+        promoteId: 'internal_id',
+      });
+    } else {
+      // Dev mock: empty GeoJSON source so layers don't error
+      map.addSource('hhc-lots', {
+        type: 'geojson',
+        data: { type: 'FeatureCollection', features: [] },
+        promoteId: 'internal_id',
+        generateId: false,
+      });
+    }
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// addLayers — adds all managed layers with initial visibility = 'none'.
+// LOD engine controls visibility at runtime.
+// ─────────────────────────────────────────────────────────────────────────────
+
+function addLayers(map: MapLibreMap): void {
+  const sourceLayer = PMTILES_URL ? 'lots' : undefined;
+
+  // Lots fill polygon
+  if (!map.getLayer('lots-fill')) {
+    map.addLayer({
+      id: 'lots-fill',
+      type: 'fill',
+      source: 'hhc-lots',
+      ...(sourceLayer ? { 'source-layer': sourceLayer } : {}),
+      layout: { visibility: 'none' },
+      paint: {
+        'fill-color': '#22c55e',
+        'fill-opacity': 0.55,
+      },
+    });
+  }
+
+  // Lots outline
+  if (!map.getLayer('lots-outline')) {
+    map.addLayer({
+      id: 'lots-outline',
+      type: 'line',
+      source: 'hhc-lots',
+      ...(sourceLayer ? { 'source-layer': sourceLayer } : {}),
+      layout: { visibility: 'none' },
+      paint: {
+        'line-color': '#ffffff',
+        'line-width': 0.8,
+        'line-opacity': 0.7,
+      },
+    });
+  }
+
+  // Lots dots (macro-close mode)
+  if (!map.getLayer('lots-dots')) {
+    map.addLayer({
+      id: 'lots-dots',
+      type: 'circle',
+      source: 'hhc-lots',
+      ...(sourceLayer ? { 'source-layer': sourceLayer } : {}),
+      layout: { visibility: 'none' },
+      paint: {
+        'circle-radius': 4,
+        'circle-color': '#22c55e',
+        'circle-opacity': 0.85,
+      },
+    });
+  }
+
+  // Lot status overlay (reserved / sold dim)
+  if (!map.getLayer('lot-status-overlay')) {
+    map.addLayer({
+      id: 'lot-status-overlay',
+      type: 'fill',
+      source: 'hhc-lots',
+      ...(sourceLayer ? { 'source-layer': sourceLayer } : {}),
+      layout: { visibility: 'none' },
+      paint: {
+        'fill-color': [
+          'match',
+          ['get', 'status'],
+          'reserved', '#f59e0b',
+          'sold',     '#ef4444',
+          'transparent',
+        ],
+        'fill-opacity': [
+          'match',
+          ['get', 'status'],
+          'available', 0,
+          0.35,
+        ],
+      },
+    });
+  }
+
+  // Staging dimming overlay
+  if (!map.getLayer('lots-staging-overlay')) {
+    map.addLayer({
+      id: 'lots-staging-overlay',
+      type: 'fill',
+      source: 'hhc-lots',
+      ...(sourceLayer ? { 'source-layer': sourceLayer } : {}),
+      filter: ['==', ['get', 'listing'], 'staging'],
+      layout: { visibility: 'none' },
+      paint: {
+        'fill-color': '#000000',
+        'fill-opacity': 0.35,
+      },
+    });
+  }
+
+  // Spotlight pulse (AI matching)
+  if (!map.getLayer('lots-spotlight-pulse')) {
+    map.addLayer({
+      id: 'lots-spotlight-pulse',
+      type: 'line',
+      source: 'hhc-lots',
+      ...(sourceLayer ? { 'source-layer': sourceLayer } : {}),
+      layout: { visibility: 'none' },
+      paint: {
+        'line-color': '#d4af37', // gold accent
+        'line-width': 3,
+        'line-opacity': 0.95,
+      },
+    });
+  }
+
+  // Lot labels (micro-extreme)
+  if (!map.getLayer('lot-labels')) {
+    map.addLayer({
+      id: 'lot-labels',
+      type: 'symbol',
+      source: 'hhc-lots',
+      ...(sourceLayer ? { 'source-layer': sourceLayer } : {}),
+      layout: {
+        visibility: 'none',
+        'text-field': ['get', 'area_label'],
+        'text-font': ['Open Sans Regular'],
+        'text-size': 10,
+        'text-anchor': 'center',
+      },
+      paint: {
+        'text-color': '#ffffff',
+        'text-halo-color': 'rgba(0,0,0,0.6)',
+        'text-halo-width': 1,
+      },
+    });
+  }
+}
